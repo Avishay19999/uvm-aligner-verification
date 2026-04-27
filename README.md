@@ -169,3 +169,20 @@ to DUT output validation (TX + Scoreboard).
 > Note: Coverage results shown here are based on a short simulation run (limited number of transactions),
 > intended to keep the log readable and focused for demonstration purposes.
 > Higher coverage can be achieved by extending the number of randomized transactions and scenarios.
+>
+> ### Full Simulation Log
+
+The full simulation log for this demo run is available here:
+
+[View Full Log](docs/logs/normal_flow_demo_log.txt)
+
+This log demonstrates:
+- APB register configuration
+- MD RX/TX transaction flow
+- Monitor tracking (RX and TX)
+- Model FIFO behavior
+- Scoreboard comparisons (expected vs actual)
+- Functional coverage collection
+- Clean UVM report (0 errors, 0 fatals)
+
+> Note: Naming such as `aligner_*` is adapted for clarity and consistency in this repository.
