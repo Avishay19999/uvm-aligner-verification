@@ -148,3 +148,20 @@ xrun -uvm -sv -f tb/messages.f +UVM_TESTNAME=algn_test_random
 ```
 
 The exact command may require adjustment based on your simulator and local RTL file locations.
+
+
+## Example Verification Flow
+
+This log demonstrates a full transaction path through the verification environment:
+from APB configuration, through stimulus injection (RX),
+internal processing (model + FIFO),
+to DUT output validation (TX + Scoreboard).
+
+### Flow Overview
+![Flow](docs/images/flow.png)
+
+### Scoreboard Comparison
+![Scoreboard](docs/images/scoreboard.png)
+
+### Functional Coverage
+![Coverage](docs/images/coverage.png)
