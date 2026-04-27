@@ -82,6 +82,8 @@ Virtual Sequence
                  Reference Model
 ```
 
+For a detailed architectural diagram:
+[View Full Architecture](docs/ARCHITECTURE.md)
 ---
 
 ## Main Verification Idea
