@@ -165,3 +165,7 @@ to DUT output validation (TX + Scoreboard).
 
 ### Functional Coverage
 ![Coverage](docs/images/coverage.png)
+
+> Note: Coverage results shown here are based on a short simulation run (limited number of transactions),
+> intended to keep the log readable and focused for demonstration purposes.
+> Higher coverage can be achieved by extending the number of randomized transactions and scenarios.
