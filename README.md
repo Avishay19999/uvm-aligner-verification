@@ -58,28 +58,45 @@ tb/
 ---
 
 ## High-Level Verification Flow
-
 ```text
 Test
   |
   v
 Virtual Sequence
   |
-  +--> APB Agent --> DUT register configuration/status access
-  |
-  +--> MD RX Agent --> DUT input stream
-                         |
-                         v
-                    Aligner DUT
-                         |
-                         v
-                    MD TX Agent monitor
-                         |
-                         v
-                    Scoreboard
-                         ^
-                         |
-                 Reference Model
+  v
+Virtual Sequencer
+  |------------------------------|
+  |                              |
+  v                              v
+APB / Register Sequence      MD RX Sequence
+  |                              |
+  v                              v
+APB Agent                    MD RX Agent
+  |                              |
+  v                              |---- observed RX items ----|
+Register Model / DUT Regs        |                         |
+  |                              v                         v
+  |                         DUT RX Input            Reference Model
+  |                              |              RX FIFO / Model / TX FIFO
+  |                              v                         |
+  +-----------------------> Aligner DUT                    |
+       config/status             |                         |
+                                 v                         v
+                           DUT TX Output          Expected TX items
+                                 |                         |
+                                 v                         |
+                            MD TX Monitor                 |
+                                 |                         |
+                                 v                         v
+                              Scoreboard <-----------------
+                         actual TX vs expected TX
+
+Coverage samples:
+- APB monitor transactions
+- MD RX monitor transactions
+- MD TX monitor transactions
+- reset/drop/status-related behavior
 ```
 
 For a detailed architectural diagram:
