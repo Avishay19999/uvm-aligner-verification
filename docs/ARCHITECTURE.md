@@ -1,242 +1,109 @@
 # UVM Environment Architecture – Aligner DUT
 
-## Overview
+## Purpose
 
-The verification environment is built to validate an **Aligner DUT**, which receives data on the RX side, processes it according to configuration registers, and produces aligned/split/filtered output on the TX side.
+This UVM verification environment validates an **Aligner DUT**, which receives data on the RX side, processes it according to register configuration (alignment, split, drop), and produces output on the TX side.
 
-The environment generates stimulus, monitors actual DUT behavior, predicts expected results using a reference model, and compares them using a scoreboard, while collecting functional coverage.
+The environment generates stimulus, monitors actual DUT behavior, predicts expected results, compares them, and collects coverage.
 
 ---
 
-## High-Level Flow
+## Block-Level Architecture
 
-```text
-Test
-  |
-  v
-Virtual Sequence
-  |
-  v
-Virtual Sequencer
-  |------------------------------|
-  |                              |
-  v                              v
-APB / Register Sequence      MD RX Sequence
-  |                              |
-  v                              v
-APB Agent                    MD RX Agent
-  |                              |
-  v                              |---- observed RX items ----|
-Register Model / DUT Regs        |                         |
-  |                              v                         v
-  |                         DUT RX Input            Reference Model
-  |                              |              RX FIFO / Model / TX FIFO
-  |                              v                         |
-  +-----------------------> Aligner DUT                    |
-       config/status             |                         |
-                                 v                         v
-                           DUT TX Output          Expected TX items
-                                 |                         |
-                                 v                         |
-                            MD TX Monitor                 |
-                                 |                         |
-                                 v                         v
-                              Scoreboard <-----------------
-                         actual TX vs expected TX
-
-Coverage samples:
-- APB monitor transactions
-- MD RX monitor transactions
-- MD TX monitor transactions
-- reset / drop / status-related scenarios
+```text id="xq6eqb"
+                 +----------------------+
+                 |        TEST          |
+                 +----------+-----------+
+                            |
+                            v
+                 +----------------------+
+                 |  VIRTUAL SEQUENCE    |
+                 +----------+-----------+
+                            |
+                            v
+                 +----------------------+
+                 | VIRTUAL SEQUENCER    |
+                 +----------+-----------+
+                            |
+        +-------------------+-------------------+
+        |                                       |
+        v                                       v
+ +------------------+                  +------------------+
+ | APB / REG SEQ    |                  |   MD RX SEQ      |
+ +--------+---------+                  +--------+---------+
+          |                                       |
+          v                                       v
+ +------------------+                  +------------------+
+ |    APB AGENT     |                  |   MD RX AGENT    |
+ +--------+---------+                  +--------+---------+
+          |                                       |
+          v                                       |---- observed RX ----+
+ +---------------------------+                     |                    |
+ | REGISTER MODEL / DUT REGS |                     v                    v
+ +-------------+-------------+              +-------------+   +------------------+
+               |                            | DUT RX INPUT|   | REFERENCE MODEL  |
+               |                            +------+------+   | RX FIFO / MODEL  |
+               |                                   |          | TX FIFO          |
+               v                                   v          +--------+---------+
+        +----------------------+         +------------------+           |
+        |     ALIGNER DUT      |<--------+   config/control |           |
+        +----------+-----------+                                expected TX
+                   |                                              |
+                   v                                              v
+          +----------------------+                      +------------------+
+          |    DUT TX OUTPUT     |                      |    SCOREBOARD    |
+          +----------+-----------+                      +--------+---------+
+                     |                                          ^
+                     v                                          |
+          +----------------------+                     actual TX |
+          |   MD TX MONITOR      |------------------------------+
+          +----------------------+
 ```
 
 ---
 
-## Main Components
+## Key Components
 
-### Test
+* **Test / Virtual Sequence**
+  Defines full test scenarios and controls stimulus flow.
 
-Top-level control of the simulation.
-Responsible for:
+* **Virtual Sequencer**
+  Coordinates multiple sequencers (APB, RX) for synchronized operation.
 
-* Building the environment
-* Configuring parameters
-* Running Virtual Sequences
+* **APB Agent & Register Model**
+  Configures DUT registers (alignment size, enable, status, counters).
 
----
+* **MD RX Agent**
+  Drives input data into the DUT and monitors actual RX transactions.
 
-### Virtual Sequence & Virtual Sequencer
+* **Aligner DUT**
+  Processes input data (alignment, split, drop) based on configuration.
 
-The **Virtual Sequence** defines full test scenarios:
+* **MD TX Monitor**
+  Captures actual DUT output (TX side).
 
-* Register configuration
-* RX stimulus
-* Timing / delay behavior
-* Error injection
+* **Reference Model**
+  Predicts expected DUT behavior using observed RX data and internal logic (FIFO-based).
 
-The **Virtual Sequencer** provides access to:
-
-* APB sequencer
-* RX sequencer
-* Other control channels
+* **Scoreboard**
+  Compares expected TX vs actual TX results.
 
 ---
 
-### APB Agent & Register Model
+## Coverage
 
-Handles DUT configuration via registers.
+Coverage is collected from:
 
-* APB Driver writes to DUT registers
-* Register Model (RAL) mirrors DUT state
-* Controls behavior such as:
-
-  * alignment size
-  * enable flags
-  * status / IRQ / counters
+* APB monitor activity
+* MD RX monitor activity
+* MD TX monitor activity
+* reset / drop / status-related scenarios
 
 ---
 
-### MD RX Agent (Input Path)
+## Notes
 
-Responsible for injecting data into the DUT.
-
-Flow:
-
-* Sequence generates transactions
-* Driver converts them into signals
-* DUT receives RX input
-
-The RX Monitor captures **what actually entered the DUT**.
-
----
-
-### DUT (Aligner)
-
-Processes incoming data:
-
-* Alignment
-* Split
-* Drop (illegal/invalid cases)
-* Status / counters / IRQ updates
-
----
-
-### MD TX Monitor (Output Path)
-
-Captures actual DUT output.
-
-Important:
-
-* Does not assume correctness
-* Only records real DUT behavior
-
----
-
-### Reference Model
-
-Predicts expected DUT behavior.
-
-Input:
-
-* Observed RX transactions (from RX monitor)
-* Register configuration
-
-Internal behavior:
-
-* RX FIFO / queues
-* Alignment / split / drop logic
-* TX expected generation
-
-Output:
-
-* Expected TX items/events
-
----
-
-### Scoreboard
-
-Compares:
-
-* Actual TX output (from TX monitor)
-* Expected TX output (from Reference Model)
-
-Handles:
-
-* Non 1:1 input/output mapping
-* Out-of-order / delayed outputs
-
-Reports:
-
-* Match → PASS
-* Mismatch → ERROR
-
----
-
-### Coverage
-
-Measures verification completeness.
-
-Collected from:
-
-* APB activity
-* RX traffic
-* TX behavior
-* Reset / drop / status scenarios
-
----
-
-## Key Concepts
-
-### Stream-Based Verification
-
-No strict 1:1 mapping between input and output:
-
-* One input may produce multiple outputs (split)
-* Multiple inputs may combine
-* Some inputs may be dropped
-
----
-
-### FIFO / Queue Usage
-
-Used to:
-
-* Handle latency
-* Track expected vs actual streams
-* Maintain ordering
-
----
-
-### Reset Awareness
-
-Environment handles reset by:
-
-* Stopping drivers safely
-* Clearing model/scoreboard queues
-* Ignoring invalid data during reset
-
----
-
-### Error / Drop Handling
-
-Illegal inputs should:
-
-* Not produce TX output
-* Increment drop counters
-* Be validated by scoreboard
-
----
-
-## Summary
-
-This UVM environment verifies the full data lifecycle:
-
-Stimulus → DUT processing → Monitoring → Prediction → Comparison → Coverage
-
-It ensures correctness across:
-
-* Functional behavior
-* Error handling
-* Timing / streaming behavior
-* Configuration-dependent logic
+* No strict 1:1 mapping between RX and TX (split / drop / alignment).
+* Reference Model uses FIFO/queues to handle streaming behavior.
+* Scoreboard compares streams, not single transactions.
+* Coverage is independent of the DUT data path.
