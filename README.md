@@ -53,7 +53,7 @@ Instead, it uses a reference model and FIFO/queue-based scoreboard comparison.
 ---
 
 ## High-Level Architecture
-
+For a deeper technical breakdown, see the [Architecture document](docs/ARCHITECTURE.md).
 ```mermaid
 flowchart LR
     tests["tests/\nUVM tests"]
