@@ -191,8 +191,7 @@ Scoreboard      = expected vs actual comparison
 
 ---
 
-## 6. DUT Behavior
-
+## 6. Observable DUT Behavior Under Verification
 ```mermaid
 flowchart LR
     config["APB configuration\nCTRL.SIZE / CTRL.OFFSET"]
