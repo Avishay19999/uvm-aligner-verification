@@ -1,4 +1,3 @@
-
 // Description: Scoreboard component for the Aligner RTL.
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -68,6 +67,8 @@
     endfunction
     
     virtual function void handle_reset(uvm_phase phase);
+      `uvm_info("SCOREBOARD_RESET", "Clearing expected RX responses, expected TX items, expected IRQs and watchdog processes", UVM_LOW)
+
       exp_rx_responses.delete();
       exp_tx_items.delete();
       exp_irqs.delete();
@@ -206,6 +207,8 @@
       end 
       
       exp_rx_responses.push_back(response);
+
+      `uvm_info("SCOREBOARD_EXPECTED_RX", $sformatf("Queued expected RX response: expected_response=%0s, queue_level=%0d", response.name(), exp_rx_responses.size()), UVM_LOW)
       
       exp_rx_response_watchdog_nb(response);
     endfunction
@@ -217,6 +220,8 @@
       end 
       
       exp_tx_items.push_back(item_mon);
+
+      `uvm_info("SCOREBOARD_EXPECTED_TX", $sformatf("Queued expected TX item: queue_level=%0d, expected_item=%0s", exp_tx_items.size(), item_mon.convert2string()), UVM_LOW)
       
       exp_tx_item_watchdog_nb(item_mon);
     endfunction
@@ -228,6 +233,8 @@
       end 
       
       exp_irqs.push_back(irq);
+
+      `uvm_info("SCOREBOARD_EXPECTED_IRQ", $sformatf("Queued expected IRQ: expected_irq=%0b, queue_level=%0d", irq, exp_irqs.size()), UVM_MEDIUM)
       
       exp_irq_watchdog_nb(irq);
     endfunction
@@ -240,10 +247,15 @@
         
         void'(process_exp_rx_response_watchdog.pop_front());
         
+        `uvm_info("SCOREBOARD_ACTUAL_RX", $sformatf("Received actual RX response: actual_response=%0s, actual_item=%0s", item_mon.response.name(), item_mon.convert2string()), UVM_LOW)
+        
         if(env_config.get_has_checks()) begin
           if(item_mon.response != exp_response) begin
-            `uvm_error("DUT_ERROR", $sformatf("Mismatch detected for the RX response -> expected: %0s, received: %0s, item: %0s",
-                                              exp_response.name(), item_mon.response.name(), item_mon.convert2string()))
+            `uvm_error("DUT_ERROR_RX_RESPONSE", $sformatf("Mismatch detected for the RX response -> expected: %0s, received: %0s, item: %0s",
+                                                          exp_response.name(), item_mon.response.name(), item_mon.convert2string()))
+          end
+          else begin
+            `uvm_info("SCOREBOARD_MATCH_RX", $sformatf("MATCH RX response: expected=%0s, actual=%0s", exp_response.name(), item_mon.response.name()), UVM_LOW)
           end
         end
       end 
@@ -257,15 +269,22 @@
         
         void'(process_exp_tx_item_watchdog.pop_front());
         
+        `uvm_info("SCOREBOARD_ACTUAL_TX", $sformatf("Received actual TX item: actual_item=%0s", item_mon.convert2string()), UVM_LOW)
+        
         if(env_config.get_has_checks()) begin
           if(item_mon.data != exp_item.data) begin
-            `uvm_error("DUT_ERROR", $sformatf("Mismatch detected for the TX data -> expected: %0s, received: %0s",
-                                              exp_item.convert2string(), item_mon.convert2string()))
+            `uvm_error("DUT_ERROR_TX_DATA", $sformatf("Mismatch detected for the TX data -> expected: %0s, received: %0s",
+                                                      exp_item.convert2string(), item_mon.convert2string()))
           end
           
           if(item_mon.offset != exp_item.offset) begin
-            `uvm_error("DUT_ERROR", $sformatf("Mismatch detected for the TX offset -> expected: %0s, received: %0s",
-                                              exp_item.convert2string(), item_mon.convert2string()))
+            `uvm_error("DUT_ERROR_TX_OFFSET", $sformatf("Mismatch detected for the TX offset -> expected: %0s, received: %0s",
+                                                        exp_item.convert2string(), item_mon.convert2string()))
+          end
+
+          if((item_mon.data == exp_item.data) && (item_mon.offset == exp_item.offset)) begin
+            `uvm_info("SCOREBOARD_MATCH_TX_DATA_OFFSET", $sformatf("MATCH TX data/offset only: expected=%0s, actual=%0s",
+                                                                   exp_item.convert2string(), item_mon.convert2string()), UVM_LOW)
           end
         end
       end
@@ -280,20 +299,22 @@
         
         if(exp_irqs.size() == 0) begin
           if(env_config.get_has_checks()) begin
-              `uvm_error("DUT_ERROR", "Unexpected IRQ detected")
-            end
+            `uvm_error("DUT_ERROR_IRQ_UNEXPECTED", "Unexpected IRQ detected")
           end
+        end
         else begin
           void'(exp_irqs.pop_front());
 
+          `uvm_info("SCOREBOARD_MATCH_IRQ", "MATCH IRQ: expected IRQ was observed", UVM_MEDIUM)
+
           process_exp_irq_watchdog[0].kill();
 
-          void'(process_exp_irq_watchdog.pop_front); 
+          void'(process_exp_irq_watchdog.pop_front()); 
         end
       end
     endtask
     
-    //Function t start the rcv_irq() task
+    //Function to start the rcv_irq() task
     local virtual function void rcv_irq_nb();
       if(process_rcv_irq != null) begin
         `uvm_fatal("ALGORITHM_ISSUE", "Can not start two instances of rcv_irq() tasks")

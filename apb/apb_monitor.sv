@@ -61,7 +61,7 @@ class apb_monitor extends uvm_ext_monitor#(.VIRTUAL_INTF(apb_vif), .ITEM_MON(apb
  
     output_port.write(item);
 
-    `uvm_info("ITEM_END", $sformatf("Monitored item:: %0s", item.convert2string()), UVM_LOW)
+    `uvm_info("APB_MONITOR", $sformatf("Observed APB transaction: %0s", item.convert2string()), UVM_LOW)
 
     @(posedge vif.pclk);
   endtask

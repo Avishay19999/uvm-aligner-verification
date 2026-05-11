@@ -1,0 +1,178 @@
+// ============================================================================
+// Log title: FAIL — Scoreboard TX Data Mismatch
+// Test: algn_test_random
+// Seed: -546431789
+// Status: FAIL
+// Suggested file name:
+// 05_fail_scoreboard_tx_data_mismatch_seed_-546431789.log
+//
+// What this log demonstrates:
+// - A functional mismatch detected by the UVM scoreboard
+// - RX traffic enters the DUT and is evaluated by the reference model
+// - The reference model generates an expected TX item
+// - TX monitor observes the actual DUT output item
+// - Scoreboard compares expected TX item vs actual TX item
+// - Scoreboard detects a TX data mismatch
+// - Simulation stops after one UVM_ERROR due to +UVM_MAX_QUIT_COUNT=1
+//
+// Main AI triage signature:
+// SCOREBOARD_EXPECTED_TX
+// -> SCOREBOARD_ACTUAL_TX
+// -> UVM_ERROR [DUT_ERROR_TX_DATA]
+// -> Mismatch detected for the TX data
+// -> expected data != received data
+//
+// Failure evidence:
+// - Expected TX data: {'h05}
+// - Received TX data: {'h04}
+// - Error ID: DUT_ERROR_TX_DATA
+// - Severity: UVM_ERROR
+// - UVM_FATAL: 0
+//
+// Likely root cause category:
+// - Functional mismatch between reference model expected output and DUT output
+// - Possible data alignment, split, offset, or reference/DUT transformation issue
+//
+// Expected AI interpretation:
+// - Classify as SCOREBOARD_TX_DATA_MISMATCH
+// - Extract expected vs actual TX data
+// - Identify scoreboard as the detecting component
+// - Recommend checking the reference model, DUT align/split behavior,
+//   CTRL.SIZE / CTRL.OFFSET configuration, and TX monitor observation
+//
+// Notes:
+// - This is an intentional failure log created for AI-based UVM log triage.
+// - Unlike a NO_VIF/configuration failure, this is a functional verification failure.
+// - The simulation reaches the data path before failing.
+// - The log is intentionally short and stops after the first scoreboard error.
+// ============================================================================
+
+
+
+[2026-05-11 06:26:07 UTC] xrun -Q -unbuffered '-timescale' '1ns/1ns' '-sysv' '-coverage' 'functional' '-svseed' 'random' '-access' '+rw' '+UVM_TESTNAME=algn_test_random' '+UVM_VERBOSITY=UVM_LOW' '+UVM_MAX_QUIT_COUNT=1' -uvmnocdnsextra -uvmhome $UVM_HOME $UVM_HOME/src/uvm_macros.svh design.sv testbench.sv  
+TOOL:	xrun	25.03-s001: Started on May 11, 2026 at 02:26:07 EDT
+xrun: 25.03-s001: (c) Copyright 1995-2025 Cadence Design Systems, Inc.
+package md_pkg;
+             |
+xmvlog: *W,TSNSPK (md_pkg.sv,9|13): `timescale is not specified for the package.  The default timescale of 1ns/1ns will be assumed for this package.
+  package algn_test_pkg;
+                      |
+xmvlog: *W,TSNSPK (algn_test_pkg.sv,10|22): `timescale is not specified for the package.  The default timescale of 1ns/1ns will be assumed for this package.
+	Top level design units:
+		uvm_pkg
+		uvm_ext_pkg
+		algn_reg_pkg
+		md_pkg
+		apb_pkg
+		algn_pkg
+		algn_test_pkg
+		testbench
+xmelab: *W,CGPIDF: Covergroup "per_instance" option , by default, is set as 0.
+xmelab: *N,COVCGN: Coverage configuration file command "set_covergroup -new_instance_reporting" can be specified to improve the scoping and naming of covergroup instances. It may be noted that subsequent merging of a coverage database saved with this command and a coverage database saved without this command is not allowed.
+Loading snapshot worklib.testbench:sv .................... Done
+SVSEED set randomly from command line: -546431789
+xcelium> source /xcelium25.03/tools/xcelium/files/xmsimrc
+xcelium> source /xcelium25.03/tools//methodology/UVM/CDNS-1.2/sv/files/tcl/uvm_sim.tcl
+xcelium> run
+UVM_INFO /xcelium25.03/tools/methodology/UVM/CDNS-1.2/sv/src/base/uvm_root.svh(412) @ 0: reporter [UVM/RELNOTES] 
+----------------------------------------------------------------
+CDNS-UVM-1.2 (25.03-s001)
+(C) 2007-2014 Mentor Graphics Corporation
+(C) 2007-2014 Cadence Design Systems, Inc.
+(C) 2006-2014 Synopsys, Inc.
+(C) 2011-2013 Cypress Semiconductor Corp.
+(C) 2013-2014 NVIDIA Corporation
+----------------------------------------------------------------
+
+  ***********       IMPORTANT RELEASE NOTES         ************
+
+  You are using a version of the UVM library that has been compiled
+  with `UVM_NO_DEPRECATED undefined.
+  See http://www.eda.org/svdb/view.php?id=3313 for more details.
+
+  You are using a version of the UVM library that has been compiled
+  with `UVM_OBJECT_DO_NOT_NEED_CONSTRUCTOR undefined.
+  See http://www.eda.org/svdb/view.php?id=3770 for more details.
+
+      (Specify +UVM_NO_RELNOTES to turn off this notice)
+
+xmsim: *W,PRPASZ: Packed array at "worklib.uvm_pkg::uvm_string_to_bits.uvm_string_to_bits" of 115200 bits exceeds limit of 4096 - not probed
+ Use 'probe -create -packed 115200 worklib.uvm_pkg::uvm_string_to_bits.uvm_string_to_bits' or 'setenv SHM_PACKED_LIMIT 115200' to adjust limit.
+xmsim: *W,PRPASZ: Packed array at "worklib.uvm_pkg::uvm_bits_to_string.str" of 115200 bits exceeds limit of 4096 - not probed
+ Use 'probe -create -packed 115200 worklib.uvm_pkg::uvm_bits_to_string.str' or 'setenv SHM_PACKED_LIMIT 115200' to adjust limit.
+UVM_INFO @ 0: reporter [RNTST] Running test algn_test_random...
+UVM_INFO @ 0: reporter [MAXQUITSET] '+UVM_MAX_QUIT_COUNT=1' provided on the command line is being applied.
+UVM_INFO algn_scoreboard.sv(70) @ 3: uvm_test_top.env.scoreboard [SCOREBOARD_RESET] Clearing expected RX responses, expected TX items, expected IRQs and watchdog processes
+UVM_INFO apb_driver.sv(28) @ 100: uvm_test_top.env.apb_agent.driver [ITEM_START] Driving "default_parent_seq.item": dir: APB_WRITE, addr: 0, data: 201, pre_drive_delay: 0, post_drive_delay: 4
+UVM_INFO apb_monitor.sv(64) @ 125: uvm_test_top.env.apb_agent.monitor [APB_MONITOR] Observed APB transaction: dir: APB_WRITE, addr: 0, data: 201, response: APB_OKAY, length: 3, prev_item_delay: 7
+UVM_INFO apb_driver.sv(28) @ 165: uvm_test_top.env.apb_agent.driver [ITEM_START] Driving "default_parent_seq.item": dir: APB_WRITE, addr: f0, data: 1b, pre_drive_delay: 2, post_drive_delay: 5
+UVM_INFO apb_monitor.sv(64) @ 215: uvm_test_top.env.apb_agent.monitor [APB_MONITOR] Observed APB transaction: dir: APB_WRITE, addr: f0, data: 1b, response: APB_OKAY, length: 3, prev_item_delay: 6
+UVM_INFO apb_driver.sv(28) @ 265: uvm_test_top.env.apb_agent.driver [ITEM_START] Driving "default_parent_seq.item": dir: APB_WRITE, addr: f4, data: b, pre_drive_delay: 3, post_drive_delay: 3
+UVM_INFO apb_monitor.sv(64) @ 325: uvm_test_top.env.apb_agent.monitor [APB_MONITOR] Observed APB transaction: dir: APB_WRITE, addr: f4, data: b, response: APB_OKAY, length: 3, prev_item_delay: 8
+UVM_INFO md_driver_master.sv(21) @ 355: uvm_test_top.env.md_rx_agent.driver [ITEM_START] Driving "uvm_test_top.env.md_rx_agent.sequencer.seq.item": data: {'h04}, offset: 0, pre_drive_delay: 2, post_drive_delay: 2
+UVM_INFO algn_model.sv(821) @ 376: uvm_test_top.env.model [MODEL_RX_DECISION] RX item evaluated by reference model: expected_response=MD_OKAY, item=[376..] data: {'h04}, size: 1, offset: 0, response: MD_OKAY, length: 1, prev_item_delay: 34
+UVM_INFO algn_model.sv(521) @ 385: uvm_test_top.env.model [RX_FIFO] RX FIFO push - new level: 1, pushed entry: [376..] data: {'h04}, size: 1, offset: 0, response: MD_OKAY, length: 1, prev_item_delay: 34
+UVM_INFO algn_scoreboard.sv(211) @ 385: uvm_test_top.env.scoreboard [SCOREBOARD_EXPECTED_RX] Queued expected RX response: expected_response=MD_OKAY, queue_level=1
+UVM_INFO algn_scoreboard.sv(250) @ 385: uvm_test_top.env.scoreboard [SCOREBOARD_ACTUAL_RX] Received actual RX response: actual_response=MD_OKAY, actual_item=[376..385] data: {'h04}, size: 1, offset: 0, response: MD_OKAY, length: 1, prev_item_delay: 34
+UVM_INFO algn_scoreboard.sv(258) @ 385: uvm_test_top.env.scoreboard [SCOREBOARD_MATCH_RX] MATCH RX response: expected=MD_OKAY, actual=MD_OKAY
+UVM_INFO md_monitor.sv(77) @ 385: uvm_test_top.env.md_rx_agent.monitor [MD_MONITOR_END] Observed MD item: [376..385] data: {'h04}, size: 1, offset: 0, response: MD_OKAY, length: 1, prev_item_delay: 34
+UVM_INFO algn_model.sv(538) @ 395: uvm_test_top.env.model [RX_FIFO] RX FIFO pop - new level: 0, popped entry: [376..385] data: {'h04}, size: 1, offset: 0, response: MD_OKAY, length: 1, prev_item_delay: 34
+UVM_INFO algn_model.sv(553) @ 405: uvm_test_top.env.model [TX_FIFO] TX FIFO push - new level: 1, pushed entry: [376..385] data: {'h04}, size: 1, offset: 2, response: MD_OKAY, length: 0, prev_item_delay: 0
+UVM_INFO md_driver_master.sv(21) @ 405: uvm_test_top.env.md_rx_agent.driver [ITEM_START] Driving "uvm_test_top.env.md_rx_agent.sequencer.seq.item": data: {'he5, 'h10, 'h66}, offset: 1, pre_drive_delay: 0, post_drive_delay: 1
+UVM_INFO algn_model.sv(821) @ 406: uvm_test_top.env.model [MODEL_RX_DECISION] RX item evaluated by reference model: expected_response=MD_ERR, item=[406..] data: {'he5, 'h10, 'h66}, size: 3, offset: 1, response: MD_OKAY, length: 1, prev_item_delay: 2
+UVM_INFO algn_model.sv(368) @ 406: uvm_test_top.env.model [CNT_DROP] Increment reg_block.STATUS.CNT_DROP: 1 due to: MD_ERR
+UVM_INFO algn_scoreboard.sv(211) @ 406: uvm_test_top.env.scoreboard [SCOREBOARD_EXPECTED_RX] Queued expected RX response: expected_response=MD_ERR, queue_level=1
+UVM_INFO md_driver_slave.sv(35) @ 406: uvm_test_top.env.md_tx_agent.driver [ITEM_START] Driving "uvm_test_top.env.md_tx_agent.sequencer.seq.seq.seq.item": length: 4, response: MD_OKAY, ready_at_end: 0
+UVM_INFO algn_scoreboard.sv(250) @ 415: uvm_test_top.env.scoreboard [SCOREBOARD_ACTUAL_RX] Received actual RX response: actual_response=MD_ERR, actual_item=[406..415] data: {'he5, 'h10, 'h66}, size: 3, offset: 1, response: MD_ERR, length: 1, prev_item_delay: 2
+UVM_INFO algn_scoreboard.sv(258) @ 415: uvm_test_top.env.scoreboard [SCOREBOARD_MATCH_RX] MATCH RX response: expected=MD_ERR, actual=MD_ERR
+UVM_INFO md_monitor.sv(77) @ 415: uvm_test_top.env.md_rx_agent.monitor [MD_MONITOR_END] Observed MD item: [406..415] data: {'he5, 'h10, 'h66}, size: 3, offset: 1, response: MD_ERR, length: 1, prev_item_delay: 2
+UVM_INFO md_driver_master.sv(21) @ 425: uvm_test_top.env.md_rx_agent.driver [ITEM_START] Driving "uvm_test_top.env.md_rx_agent.sequencer.seq.item": data: {'h3d, 'hce, 'h96, 'hc6}, offset: 0, pre_drive_delay: 5, post_drive_delay: 0
+UVM_INFO algn_model.sv(568) @ 455: uvm_test_top.env.model [TX_FIFO] TX FIFO pop - new level: 0, popped entry: [376..385] data: {'h04}, size: 1, offset: 2, response: MD_OKAY, length: 0, prev_item_delay: 0
+UVM_INFO algn_scoreboard.sv(224) @ 455: uvm_test_top.env.scoreboard [SCOREBOARD_EXPECTED_TX] Queued expected TX item: queue_level=1, expected_item=[376..385] data: {'h04}, size: 1, offset: 2, response: MD_OKAY, length: 0, prev_item_delay: 0
+UVM_INFO algn_scoreboard.sv(276) @ 455: uvm_test_top.env.scoreboard [SCOREBOARD_ACTUAL_TX] Received actual TX item: actual_item=[406..455] data: {'h04}, size: 1, offset: 2, response: MD_OKAY, length: 5, prev_item_delay: 37
+UVM_ERROR algn_scoreboard.sv(281) @ 455: uvm_test_top.env.scoreboard [DUT_ERROR_TX_DATA] Mismatch detected for the TX data -> expected: [376..385] data: {'h05}, size: 1, offset: 2, response: MD_OKAY, length: 0, prev_item_delay: 0, received: [406..455] data: {'h04}, size: 1, offset: 2, response: MD_OKAY, length: 5, prev_item_delay: 37
+UVM_INFO /xcelium25.03/tools/methodology/UVM/CDNS-1.2/sv/src/base/uvm_report_server.svh(851) @ 455: reporter [UVM/REPORT/SERVER] 
+--- UVM Report Summary ---
+
+Quit count reached!
+Quit count :     1 of     1
+** Report counts by severity
+UVM_INFO :   31
+UVM_WARNING :    0
+UVM_ERROR :    1
+UVM_FATAL :    0
+** Report counts by id
+[APB_MONITOR]     3
+[CNT_DROP]     1
+[DUT_ERROR_TX_DATA]     1
+[ITEM_START]     7
+[MAXQUITSET]     1
+[MD_MONITOR_END]     2
+[MODEL_RX_DECISION]     2
+[RNTST]     1
+[RX_FIFO]     2
+[SCOREBOARD_ACTUAL_RX]     2
+[SCOREBOARD_ACTUAL_TX]     1
+[SCOREBOARD_EXPECTED_RX]     2
+[SCOREBOARD_EXPECTED_TX]     1
+[SCOREBOARD_MATCH_RX]     2
+[SCOREBOARD_RESET]     1
+[TX_FIFO]     2
+[UVM/RELNOTES]     1
+
+Simulation complete via $finish(1) at time 455 NS + 1
+/xcelium25.03/tools/methodology/UVM/CDNS-1.2/sv/src/base/uvm_root.svh:135     $finish;
+xcelium> exit
+xmsim: *N,COVCGN: Coverage configuration file command "set_covergroup -new_instance_reporting" can be specified to improve the scoping and naming of covergroup instances. It may be noted that subsequent merging of a coverage database saved with this command and a coverage database saved without this command is not allowed.
+
+coverage setup:
+  workdir  :  ./cov_work
+  dutinst  :  testbench(testbench)
+  scope    :  scope
+  testname :  test_sv-546431789
+
+coverage files:
+  model(design data) :  ./cov_work/scope/icc_00000000_27293482.ucm
+  data               :  ./cov_work/scope/test_sv-546431789/icc_00000000_27293482.ucd
+TOOL:	xrun	25.03-s001: Exiting on May 11, 2026 at 02:26:20 EDT  (total: 00:00:13)
+Done

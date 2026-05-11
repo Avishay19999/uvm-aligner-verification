@@ -1,0 +1,250 @@
+// ============================================================================
+// Log title: Register Access PASS — APB Mapped/Unmapped Access + Coverage
+// Test: algn_test_reg_access
+// Seed: -278275300
+// Status: PASS
+// Suggested file name:
+// 03_reg_access_pass_apb_mapped_unmapped_coverage_seed_-278275300.log
+//
+// What this log demonstrates:
+// - APB register read/write activity
+// - Accesses to valid/mapped register addresses
+// - Accesses to invalid/unmapped addresses
+// - APB_OKAY responses for legal register accesses
+// - APB_ERR responses for unmapped/illegal accesses
+// - Address, data, direction and response visibility through APB_MONITOR
+// - APB functional coverage collection and summary
+// - Clean simulation result with 0 UVM_ERROR and 0 UVM_FATAL
+//
+// Main AI triage signature:
+// APB_MONITOR
+// -> dir: APB_READ / APB_WRITE
+// -> addr: mapped or unmapped
+// -> response: APB_OKAY or APB_ERR
+// -> APB coverage summary
+//
+// Notes:
+// - This log intentionally focuses on APB/register access behavior.
+// - RX/TX traffic and split coverage may be 0% because this test does not
+//   target the streaming data path.
+// - This is expected for this specific test and is not considered a failure.
+// - This log is useful as a PASS reference log for AI-based UVM log triage,
+//   especially for distinguishing legal vs illegal APB/register accesses.
+// ============================================================================
+
+
+[2026-05-10 20:01:00 UTC] xrun -Q -unbuffered '-timescale' '1ns/1ns' '-sysv' '-coverage' 'functional' '-svseed' 'random' '-access' '+rw' '+UVM_TESTNAME=algn_test_reg_access' '+UVM_VERBOSITY=UVM_LOW' '+UVM_MAX_QUIT_COUNT=1' -uvmnocdnsextra -uvmhome $UVM_HOME $UVM_HOME/src/uvm_macros.svh design.sv testbench.sv  
+TOOL:	xrun	25.03-s001: Started on May 10, 2026 at 16:01:00 EDT
+xrun: 25.03-s001: (c) Copyright 1995-2025 Cadence Design Systems, Inc.
+package md_pkg;
+             |
+xmvlog: *W,TSNSPK (md_pkg.sv,9|13): `timescale is not specified for the package.  The default timescale of 1ns/1ns will be assumed for this package.
+  package algn_test_pkg;
+                      |
+xmvlog: *W,TSNSPK (algn_test_pkg.sv,10|22): `timescale is not specified for the package.  The default timescale of 1ns/1ns will be assumed for this package.
+	Top level design units:
+		uvm_pkg
+		uvm_ext_pkg
+		algn_reg_pkg
+		md_pkg
+		apb_pkg
+		algn_pkg
+		algn_test_pkg
+		testbench
+xmelab: *W,CGPIDF: Covergroup "per_instance" option , by default, is set as 0.
+xmelab: *N,COVCGN: Coverage configuration file command "set_covergroup -new_instance_reporting" can be specified to improve the scoping and naming of covergroup instances. It may be noted that subsequent merging of a coverage database saved with this command and a coverage database saved without this command is not allowed.
+Loading snapshot worklib.testbench:sv .................... Done
+SVSEED set randomly from command line: -278275300
+xcelium> source /xcelium25.03/tools/xcelium/files/xmsimrc
+xcelium> source /xcelium25.03/tools//methodology/UVM/CDNS-1.2/sv/files/tcl/uvm_sim.tcl
+xcelium> run
+UVM_INFO /xcelium25.03/tools/methodology/UVM/CDNS-1.2/sv/src/base/uvm_root.svh(412) @ 0: reporter [UVM/RELNOTES] 
+----------------------------------------------------------------
+CDNS-UVM-1.2 (25.03-s001)
+(C) 2007-2014 Mentor Graphics Corporation
+(C) 2007-2014 Cadence Design Systems, Inc.
+(C) 2006-2014 Synopsys, Inc.
+(C) 2011-2013 Cypress Semiconductor Corp.
+(C) 2013-2014 NVIDIA Corporation
+----------------------------------------------------------------
+
+  ***********       IMPORTANT RELEASE NOTES         ************
+
+  You are using a version of the UVM library that has been compiled
+  with `UVM_NO_DEPRECATED undefined.
+  See http://www.eda.org/svdb/view.php?id=3313 for more details.
+
+  You are using a version of the UVM library that has been compiled
+  with `UVM_OBJECT_DO_NOT_NEED_CONSTRUCTOR undefined.
+  See http://www.eda.org/svdb/view.php?id=3770 for more details.
+
+      (Specify +UVM_NO_RELNOTES to turn off this notice)
+
+xmsim: *W,PRPASZ: Packed array at "worklib.uvm_pkg::uvm_string_to_bits.uvm_string_to_bits" of 115200 bits exceeds limit of 4096 - not probed
+ Use 'probe -create -packed 115200 worklib.uvm_pkg::uvm_string_to_bits.uvm_string_to_bits' or 'setenv SHM_PACKED_LIMIT 115200' to adjust limit.
+xmsim: *W,PRPASZ: Packed array at "worklib.uvm_pkg::uvm_bits_to_string.str" of 115200 bits exceeds limit of 4096 - not probed
+ Use 'probe -create -packed 115200 worklib.uvm_pkg::uvm_bits_to_string.str' or 'setenv SHM_PACKED_LIMIT 115200' to adjust limit.
+UVM_INFO @ 0: reporter [RNTST] Running test algn_test_reg_access...
+UVM_INFO @ 0: reporter [MAXQUITSET] '+UVM_MAX_QUIT_COUNT=1' provided on the command line is being applied.
+UVM_INFO algn_scoreboard.sv(70) @ 3: uvm_test_top.env.scoreboard [SCOREBOARD_RESET] Clearing expected RX responses, expected TX items, expected IRQs and watchdog processes
+UVM_INFO apb_driver.sv(28) @ 100: uvm_test_top.env.apb_agent.driver [ITEM_START] Driving "default_parent_seq.item": dir: APB_WRITE, addr: f0, data: 3, pre_drive_delay: 1, post_drive_delay: 2
+UVM_INFO apb_monitor.sv(64) @ 135: uvm_test_top.env.apb_agent.monitor [APB_MONITOR] Observed APB transaction: dir: APB_WRITE, addr: f0, data: 3, response: APB_OKAY, length: 3, prev_item_delay: 8
+UVM_INFO apb_driver.sv(28) @ 155: uvm_test_top.env.apb_agent.driver [ITEM_START] Driving "uvm_test_top.env.virtual_sequencer.seq.seq.item": dir: APB_READ, addr: d0a, pre_drive_delay: 5, post_drive_delay: 0
+UVM_INFO apb_monitor.sv(64) @ 235: uvm_test_top.env.apb_agent.monitor [APB_MONITOR] Observed APB transaction: dir: APB_READ, addr: d0a, data: 0, response: APB_ERR, length: 3, prev_item_delay: 7
+UVM_INFO apb_driver.sv(28) @ 255: uvm_test_top.env.apb_agent.driver [ITEM_START] Driving "default_parent_seq.item": dir: APB_READ, addr: c, pre_drive_delay: 3, post_drive_delay: 3
+UVM_INFO apb_monitor.sv(64) @ 315: uvm_test_top.env.apb_agent.monitor [APB_MONITOR] Observed APB transaction: dir: APB_READ, addr: c, data: 0, response: APB_OKAY, length: 3, prev_item_delay: 5
+UVM_INFO apb_driver.sv(28) @ 435: uvm_test_top.env.apb_agent.driver [ITEM_START] Driving "uvm_test_top.env.virtual_sequencer.seq.seq.item": dir: APB_WRITE, addr: 5863, data: a360cd8e, pre_drive_delay: 1, post_drive_delay: 5
+UVM_INFO apb_monitor.sv(64) @ 475: uvm_test_top.env.apb_agent.monitor [APB_MONITOR] Observed APB transaction: dir: APB_WRITE, addr: 5863, data: a360cd8e, response: APB_ERR, length: 3, prev_item_delay: 13
+UVM_INFO apb_driver.sv(28) @ 525: uvm_test_top.env.apb_agent.driver [ITEM_START] Driving "default_parent_seq.item": dir: APB_WRITE, addr: 0, data: 10202, pre_drive_delay: 0, post_drive_delay: 3
+UVM_INFO apb_monitor.sv(64) @ 555: uvm_test_top.env.apb_agent.monitor [APB_MONITOR] Observed APB transaction: dir: APB_WRITE, addr: 0, data: 10202, response: APB_OKAY, length: 3, prev_item_delay: 5
+UVM_INFO apb_driver.sv(28) @ 585: uvm_test_top.env.apb_agent.driver [ITEM_START] Driving "uvm_test_top.env.virtual_sequencer.seq.seq.item": dir: APB_READ, addr: 6161, pre_drive_delay: 4, post_drive_delay: 4
+UVM_INFO apb_monitor.sv(64) @ 655: uvm_test_top.env.apb_agent.monitor [APB_MONITOR] Observed APB transaction: dir: APB_READ, addr: 6161, data: 0, response: APB_ERR, length: 3, prev_item_delay: 7
+UVM_INFO apb_driver.sv(28) @ 755: uvm_test_top.env.apb_agent.driver [ITEM_START] Driving "default_parent_seq.item": dir: APB_READ, addr: f0, pre_drive_delay: 4, post_drive_delay: 5
+UVM_INFO apb_monitor.sv(64) @ 825: uvm_test_top.env.apb_agent.monitor [APB_MONITOR] Observed APB transaction: dir: APB_READ, addr: f0, data: 3, response: APB_OKAY, length: 3, prev_item_delay: 14
+UVM_INFO apb_driver.sv(28) @ 875: uvm_test_top.env.apb_agent.driver [ITEM_START] Driving "uvm_test_top.env.virtual_sequencer.seq.seq.item": dir: APB_READ, addr: 1c79, pre_drive_delay: 0, post_drive_delay: 0
+UVM_INFO apb_monitor.sv(64) @ 905: uvm_test_top.env.apb_agent.monitor [APB_MONITOR] Observed APB transaction: dir: APB_READ, addr: 1c79, data: 0, response: APB_ERR, length: 3, prev_item_delay: 5
+UVM_INFO apb_driver.sv(28) @ 995: uvm_test_top.env.apb_agent.driver [ITEM_START] Driving "default_parent_seq.item": dir: APB_READ, addr: f4, pre_drive_delay: 0, post_drive_delay: 4
+UVM_INFO apb_monitor.sv(64) @ 1025: uvm_test_top.env.apb_agent.monitor [APB_MONITOR] Observed APB transaction: dir: APB_READ, addr: f4, data: 0, response: APB_OKAY, length: 3, prev_item_delay: 9
+UVM_INFO apb_driver.sv(28) @ 1065: uvm_test_top.env.apb_agent.driver [ITEM_START] Driving "uvm_test_top.env.virtual_sequencer.seq.seq.item": dir: APB_READ, addr: 4eab, pre_drive_delay: 0, post_drive_delay: 4
+UVM_INFO apb_monitor.sv(64) @ 1095: uvm_test_top.env.apb_agent.monitor [APB_MONITOR] Observed APB transaction: dir: APB_READ, addr: 4eab, data: 0, response: APB_ERR, length: 3, prev_item_delay: 4
+UVM_INFO apb_driver.sv(28) @ 1155: uvm_test_top.env.apb_agent.driver [ITEM_START] Driving "default_parent_seq.item": dir: APB_READ, addr: 0, pre_drive_delay: 1, post_drive_delay: 1
+UVM_INFO apb_monitor.sv(64) @ 1195: uvm_test_top.env.apb_agent.monitor [APB_MONITOR] Observed APB transaction: dir: APB_READ, addr: 0, data: 202, response: APB_OKAY, length: 3, prev_item_delay: 7
+UVM_INFO apb_driver.sv(28) @ 1205: uvm_test_top.env.apb_agent.driver [ITEM_START] Driving "uvm_test_top.env.virtual_sequencer.seq.seq.item": dir: APB_READ, addr: 32f7, pre_drive_delay: 3, post_drive_delay: 5
+UVM_INFO apb_monitor.sv(64) @ 1265: uvm_test_top.env.apb_agent.monitor [APB_MONITOR] Observed APB transaction: dir: APB_READ, addr: 32f7, data: 0, response: APB_ERR, length: 3, prev_item_delay: 4
+UVM_INFO apb_driver.sv(28) @ 1315: uvm_test_top.env.apb_agent.driver [ITEM_START] Driving "default_parent_seq.item": dir: APB_READ, addr: 0, pre_drive_delay: 4, post_drive_delay: 5
+UVM_INFO apb_monitor.sv(64) @ 1385: uvm_test_top.env.apb_agent.monitor [APB_MONITOR] Observed APB transaction: dir: APB_READ, addr: 0, data: 202, response: APB_OKAY, length: 3, prev_item_delay: 9
+UVM_INFO apb_driver.sv(28) @ 1435: uvm_test_top.env.apb_agent.driver [ITEM_START] Driving "uvm_test_top.env.virtual_sequencer.seq.seq.item": dir: APB_READ, addr: d4e7, pre_drive_delay: 5, post_drive_delay: 1
+UVM_INFO apb_monitor.sv(64) @ 1515: uvm_test_top.env.apb_agent.monitor [APB_MONITOR] Observed APB transaction: dir: APB_READ, addr: d4e7, data: 0, response: APB_ERR, length: 3, prev_item_delay: 10
+UVM_INFO apb_driver.sv(28) @ 1525: uvm_test_top.env.apb_agent.driver [ITEM_START] Driving "default_parent_seq.item": dir: APB_READ, addr: 0, pre_drive_delay: 0, post_drive_delay: 4
+UVM_INFO apb_monitor.sv(64) @ 1555: uvm_test_top.env.apb_agent.monitor [APB_MONITOR] Observed APB transaction: dir: APB_READ, addr: 0, data: 202, response: APB_OKAY, length: 3, prev_item_delay: 1
+UVM_INFO apb_driver.sv(28) @ 1595: uvm_test_top.env.apb_agent.driver [ITEM_START] Driving "uvm_test_top.env.virtual_sequencer.seq.seq.item": dir: APB_READ, addr: e267, pre_drive_delay: 2, post_drive_delay: 2
+UVM_INFO apb_monitor.sv(64) @ 1645: uvm_test_top.env.apb_agent.monitor [APB_MONITOR] Observed APB transaction: dir: APB_READ, addr: e267, data: 0, response: APB_ERR, length: 3, prev_item_delay: 6
+UVM_INFO apb_driver.sv(28) @ 1665: uvm_test_top.env.apb_agent.driver [ITEM_START] Driving "default_parent_seq.item": dir: APB_READ, addr: f4, pre_drive_delay: 5, post_drive_delay: 0
+UVM_INFO apb_monitor.sv(64) @ 1745: uvm_test_top.env.apb_agent.monitor [APB_MONITOR] Observed APB transaction: dir: APB_READ, addr: f4, data: 0, response: APB_OKAY, length: 3, prev_item_delay: 7
+UVM_INFO apb_driver.sv(28) @ 1785: uvm_test_top.env.apb_agent.driver [ITEM_START] Driving "default_parent_seq.item": dir: APB_READ, addr: c, pre_drive_delay: 2, post_drive_delay: 2
+UVM_INFO apb_monitor.sv(64) @ 1835: uvm_test_top.env.apb_agent.monitor [APB_MONITOR] Observed APB transaction: dir: APB_READ, addr: c, data: 0, response: APB_OKAY, length: 3, prev_item_delay: 6
+UVM_INFO apb_driver.sv(28) @ 2005: uvm_test_top.env.apb_agent.driver [ITEM_START] Driving "default_parent_seq.item": dir: APB_READ, addr: c, pre_drive_delay: 5, post_drive_delay: 1
+UVM_INFO apb_monitor.sv(64) @ 2085: uvm_test_top.env.apb_agent.monitor [APB_MONITOR] Observed APB transaction: dir: APB_READ, addr: c, data: 0, response: APB_OKAY, length: 3, prev_item_delay: 22
+UVM_INFO apb_driver.sv(28) @ 2175: uvm_test_top.env.apb_agent.driver [ITEM_START] Driving "default_parent_seq.item": dir: APB_READ, addr: c, pre_drive_delay: 4, post_drive_delay: 5
+UVM_INFO apb_monitor.sv(64) @ 2245: uvm_test_top.env.apb_agent.monitor [APB_MONITOR] Observed APB transaction: dir: APB_READ, addr: c, data: 0, response: APB_OKAY, length: 3, prev_item_delay: 13
+UVM_INFO apb_driver.sv(28) @ 2395: uvm_test_top.env.apb_agent.driver [ITEM_START] Driving "default_parent_seq.item": dir: APB_READ, addr: f4, pre_drive_delay: 3, post_drive_delay: 2
+UVM_INFO apb_monitor.sv(64) @ 2455: uvm_test_top.env.apb_agent.monitor [APB_MONITOR] Observed APB transaction: dir: APB_READ, addr: f4, data: 0, response: APB_OKAY, length: 3, prev_item_delay: 18
+UVM_INFO apb_driver.sv(28) @ 2605: uvm_test_top.env.apb_agent.driver [ITEM_START] Driving "default_parent_seq.item": dir: APB_WRITE, addr: 0, data: 10004, pre_drive_delay: 1, post_drive_delay: 5
+UVM_INFO apb_monitor.sv(64) @ 2645: uvm_test_top.env.apb_agent.monitor [APB_MONITOR] Observed APB transaction: dir: APB_WRITE, addr: 0, data: 10004, response: APB_OKAY, length: 3, prev_item_delay: 16
+UVM_INFO /xcelium25.03/tools/methodology/UVM/CDNS-1.2/sv/src/base/uvm_objection.svh(1271) @ 2815: reporter [TEST_DONE] 'run' phase is ready to proceed to the 'extract' phase
+UVM_INFO uvm_ext_coverage.sv(56) @ 2815: uvm_test_top.env.apb_agent.coverage [COVERAGE] Coverage: 
+   cover_item:              77.86%
+      direction:            100.00%
+      trans_direction:      100.00%
+      response:             100.00%
+      response_x_direction: 100.00%
+      length:               10.00%
+      prev_item_delay:      57.14%
+                                    
+   cover_reset:             50.00%
+      access_ongoing:       50.00%
+
+Child component: wrap_cover_addr_0
+   cover_index:              100.00%
+      index:                 100.00%
+
+Child component: wrap_cover_addr_1
+   cover_index:              100.00%
+      index:                 100.00%
+
+Child component: wrap_cover_rd_data_0
+   cover_index:              100.00%
+      index:                 100.00%
+
+Child component: wrap_cover_rd_data_1
+   cover_index:              9.38%
+      index:                 9.38%
+
+Child component: wrap_cover_wr_data_0
+   cover_index:              100.00%
+      index:                 100.00%
+
+Child component: wrap_cover_wr_data_1
+   cover_index:              56.25%
+      index:                 56.25%
+UVM_INFO algn_coverage.sv(98) @ 2815: uvm_test_top.env.coverage [COVERAGE] Coverage: 
+   cover_split:            0.00%
+      ctrl_offset:         0.00%
+      ctrl_size:           0.00%
+      md_offset:           0.00%
+      md_size:             0.00%
+      num_bytes_needed:    0.00%
+      all:                 0.00%
+UVM_INFO uvm_ext_coverage.sv(56) @ 2815: uvm_test_top.env.md_rx_agent.coverage [COVERAGE] Coverage: 
+   cover_item:         0.00%
+      offset:          0.00%
+      size:            0.00%
+      response:        0.00%
+      length:          0.00%
+      prev_item_delay: 0.00%
+      offset_x_size:   0.00%
+                                    
+   cover_reset:        50.00%
+      access_ongoing:  50.00%
+
+Child component: wrap_cover_data_0
+   cover_index:              0.00%
+      index:                 0.00%
+
+Child component: wrap_cover_data_1
+   cover_index:              0.00%
+      index:                 0.00%
+UVM_INFO uvm_ext_coverage.sv(56) @ 2815: uvm_test_top.env.md_tx_agent.coverage [COVERAGE] Coverage: 
+   cover_item:         0.00%
+      offset:          0.00%
+      size:            0.00%
+      response:        0.00%
+      length:          0.00%
+      prev_item_delay: 0.00%
+      offset_x_size:   0.00%
+                                    
+   cover_reset:        50.00%
+      access_ongoing:  50.00%
+
+Child component: wrap_cover_data_0
+   cover_index:              0.00%
+      index:                 0.00%
+
+Child component: wrap_cover_data_1
+   cover_index:              0.00%
+      index:                 0.00%
+UVM_INFO /xcelium25.03/tools/methodology/UVM/CDNS-1.2/sv/src/base/uvm_report_server.svh(851) @ 2815: reporter [UVM/REPORT/SERVER] 
+--- UVM Report Summary ---
+
+Quit count :     0 of     1
+** Report counts by severity
+UVM_INFO :   53
+UVM_WARNING :    0
+UVM_ERROR :    0
+UVM_FATAL :    0
+** Report counts by id
+[APB_MONITOR]    22
+[COVERAGE]     4
+[ITEM_START]    22
+[MAXQUITSET]     1
+[RNTST]     1
+[SCOREBOARD_RESET]     1
+[TEST_DONE]     1
+[UVM/RELNOTES]     1
+
+Simulation complete via $finish(1) at time 2815 NS + 59
+/xcelium25.03/tools/methodology/UVM/CDNS-1.2/sv/src/base/uvm_root.svh:543     $finish;
+xcelium> exit
+xmsim: *N,COVCGN: Coverage configuration file command "set_covergroup -new_instance_reporting" can be specified to improve the scoping and naming of covergroup instances. It may be noted that subsequent merging of a coverage database saved with this command and a coverage database saved without this command is not allowed.
+
+coverage setup:
+  workdir  :  ./cov_work
+  dutinst  :  testbench(testbench)
+  scope    :  scope
+  testname :  test_sv-278275300
+
+coverage files:
+  model(design data) :  ./cov_work/scope/icc_00000000_27293482.ucm
+  data               :  ./cov_work/scope/test_sv-278275300/icc_00000000_27293482.ucd
+TOOL:	xrun	25.03-s001: Exiting on May 10, 2026 at 16:01:14 EDT  (total: 00:00:14)
+Done

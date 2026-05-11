@@ -51,7 +51,7 @@ class md_monitor#(int unsigned DATA_WIDTH = 32) extends uvm_ext_monitor#(.VIRTUA
  
         void'(begin_tr(item));
 
-        `uvm_info("ITEM_START", $sformatf("Monitor started collecting item: %0s", item.convert2string()), UVM_LOW)
+        `uvm_info("MD_MONITOR_START", $sformatf("Started collecting MD item: %0s", item.convert2string()), UVM_MEDIUM)
 
         output_port.write(item);
 
@@ -74,7 +74,7 @@ class md_monitor#(int unsigned DATA_WIDTH = 32) extends uvm_ext_monitor#(.VIRTUA
 
         output_port.write(item);
 
-        `uvm_info("ITEM_END", $sformatf("Monitored item: %0s", item.convert2string()), UVM_LOW)
+        `uvm_info("MD_MONITOR_END", $sformatf("Observed MD item: %0s", item.convert2string()), UVM_LOW)
       endtask
 
     endclass

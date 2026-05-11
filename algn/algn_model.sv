@@ -640,6 +640,9 @@
                   info.md_size             = buffer_item.data.size();
                   info.num_bytes_needed    = num_bytes_needed;
                   
+                  `uvm_info("MODEL_SPLIT", $sformatf("Split required: CTRL.SIZE=%0d CTRL.OFFSET=%0d MD.size=%0d MD.offset=%0d num_bytes_needed=%0d source_item=%0s",
+                                                        ctrl_size, ctrl_offset, buffer_item.data.size(), buffer_item.offset, num_bytes_needed, buffer_item.convert2string()), UVM_LOW)
+
                   port_out_split_info.write(info);
                 end 
               end
@@ -814,6 +817,8 @@
     virtual function void write_in_rx(md_item_mon item_mon);
       if(item_mon.is_active()) begin
         md_response exp_response = get_exp_response(item_mon);
+
+        `uvm_info("MODEL_RX_DECISION", $sformatf("RX item evaluated by reference model: expected_response=%0s, item=%0s", exp_response.name(), item_mon.convert2string()), UVM_LOW)
         
         case(exp_response)
           MD_ERR : begin

@@ -1,0 +1,126 @@
+// ============================================================================
+// Log title: FAIL — NO_VIF / UVM config_db Virtual Interface Binding Error
+// Test: algn_test_random
+// Seed: 397003325
+// Status: FAIL
+// Suggested file name:
+// 04_fail_no_vif_config_db_instance_path_seed_397003325.log
+//
+// What this log demonstrates:
+// - A UVM infrastructure/configuration failure before real stimulus starts
+// - APB agent fails to retrieve its virtual interface from uvm_config_db
+// - The failing component is uvm_test_top.env.apb_agent_h
+// - The failure occurs at time 0 before APB/RX/TX traffic begins
+// - UVM stops with UVM_FATAL and report ID [NO_VIF]
+//
+// Main AI triage signature:
+// UVM_FATAL
+// -> [NO_VIF]
+// -> Could not get from the database the virtual interface using name "vif"
+// -> Component path includes uvm_test_top.env.apb_agent_h
+//
+// Likely root cause:
+// - uvm_config_db::set path does not match the UVM component instance path
+// - In this injected failure, the APB agent instance name was changed from
+//   "apb_agent" to "apb_agent_h", while the virtual interface configuration
+//   still targets the original APB agent path.
+//
+// Expected AI interpretation:
+// - Classify as NO_VIF / virtual interface binding failure
+// - Suspect config_db path mismatch or missing virtual interface set
+// - Recommend checking testbench.sv uvm_config_db::set path
+// - Recommend checking the APB agent instance name in algn_env.sv
+//
+// Notes:
+// - This is an intentional failure log created for AI-based UVM log triage.
+// - This is not a DUT functional bug.
+// - The simulation fails before scoreboard, model, coverage, or data-path
+//   behavior can run.
+// ============================================================================
+
+
+[2026-05-10 20:11:46 UTC] xrun -Q -unbuffered '-timescale' '1ns/1ns' '-sysv' '-coverage' 'functional' '-svseed' 'random' '-access' '+rw' '+UVM_TESTNAME=algn_test_random' '+UVM_VERBOSITY=UVM_LOW' '+UVM_MAX_QUIT_COUNT=1' -uvmnocdnsextra -uvmhome $UVM_HOME $UVM_HOME/src/uvm_macros.svh design.sv testbench.sv  
+TOOL:	xrun	25.03-s001: Started on May 10, 2026 at 16:11:46 EDT
+xrun: 25.03-s001: (c) Copyright 1995-2025 Cadence Design Systems, Inc.
+package md_pkg;
+             |
+xmvlog: *W,TSNSPK (md_pkg.sv,9|13): `timescale is not specified for the package.  The default timescale of 1ns/1ns will be assumed for this package.
+  package algn_test_pkg;
+                      |
+xmvlog: *W,TSNSPK (algn_test_pkg.sv,10|22): `timescale is not specified for the package.  The default timescale of 1ns/1ns will be assumed for this package.
+	Top level design units:
+		uvm_pkg
+		uvm_ext_pkg
+		algn_reg_pkg
+		md_pkg
+		apb_pkg
+		algn_pkg
+		algn_test_pkg
+		testbench
+xmelab: *W,CGPIDF: Covergroup "per_instance" option , by default, is set as 0.
+xmelab: *N,COVCGN: Coverage configuration file command "set_covergroup -new_instance_reporting" can be specified to improve the scoping and naming of covergroup instances. It may be noted that subsequent merging of a coverage database saved with this command and a coverage database saved without this command is not allowed.
+Loading snapshot worklib.testbench:sv .................... Done
+SVSEED set randomly from command line: 397003325
+xcelium> source /xcelium25.03/tools/xcelium/files/xmsimrc
+xcelium> source /xcelium25.03/tools//methodology/UVM/CDNS-1.2/sv/files/tcl/uvm_sim.tcl
+xcelium> run
+UVM_INFO /xcelium25.03/tools/methodology/UVM/CDNS-1.2/sv/src/base/uvm_root.svh(412) @ 0: reporter [UVM/RELNOTES] 
+----------------------------------------------------------------
+CDNS-UVM-1.2 (25.03-s001)
+(C) 2007-2014 Mentor Graphics Corporation
+(C) 2007-2014 Cadence Design Systems, Inc.
+(C) 2006-2014 Synopsys, Inc.
+(C) 2011-2013 Cypress Semiconductor Corp.
+(C) 2013-2014 NVIDIA Corporation
+----------------------------------------------------------------
+
+  ***********       IMPORTANT RELEASE NOTES         ************
+
+  You are using a version of the UVM library that has been compiled
+  with `UVM_NO_DEPRECATED undefined.
+  See http://www.eda.org/svdb/view.php?id=3313 for more details.
+
+  You are using a version of the UVM library that has been compiled
+  with `UVM_OBJECT_DO_NOT_NEED_CONSTRUCTOR undefined.
+  See http://www.eda.org/svdb/view.php?id=3770 for more details.
+
+      (Specify +UVM_NO_RELNOTES to turn off this notice)
+
+xmsim: *W,PRPASZ: Packed array at "worklib.uvm_pkg::uvm_string_to_bits.uvm_string_to_bits" of 115200 bits exceeds limit of 4096 - not probed
+ Use 'probe -create -packed 115200 worklib.uvm_pkg::uvm_string_to_bits.uvm_string_to_bits' or 'setenv SHM_PACKED_LIMIT 115200' to adjust limit.
+xmsim: *W,PRPASZ: Packed array at "worklib.uvm_pkg::uvm_bits_to_string.str" of 115200 bits exceeds limit of 4096 - not probed
+ Use 'probe -create -packed 115200 worklib.uvm_pkg::uvm_bits_to_string.str' or 'setenv SHM_PACKED_LIMIT 115200' to adjust limit.
+UVM_INFO @ 0: reporter [RNTST] Running test algn_test_random...
+UVM_INFO @ 0: reporter [MAXQUITSET] '+UVM_MAX_QUIT_COUNT=1' provided on the command line is being applied.
+UVM_FATAL uvm_ext_agent.sv(53) @ 0: uvm_test_top.env.apb_agent_h [NO_VIF] Could not get from the database the virtual interface using name "vif"
+UVM_INFO /xcelium25.03/tools/methodology/UVM/CDNS-1.2/sv/src/base/uvm_report_server.svh(851) @ 0: reporter [UVM/REPORT/SERVER] 
+--- UVM Report Summary ---
+
+Quit count :     0 of     1
+** Report counts by severity
+UVM_INFO :    3
+UVM_WARNING :    0
+UVM_ERROR :    0
+UVM_FATAL :    1
+** Report counts by id
+[MAXQUITSET]     1
+[NO_VIF]     1
+[RNTST]     1
+[UVM/RELNOTES]     1
+
+Simulation complete via $finish(1) at time 0 FS + 18
+/xcelium25.03/tools/methodology/UVM/CDNS-1.2/sv/src/base/uvm_root.svh:135     $finish;
+xcelium> exit
+xmsim: *N,COVCGN: Coverage configuration file command "set_covergroup -new_instance_reporting" can be specified to improve the scoping and naming of covergroup instances. It may be noted that subsequent merging of a coverage database saved with this command and a coverage database saved without this command is not allowed.
+
+coverage setup:
+  workdir  :  ./cov_work
+  dutinst  :  testbench(testbench)
+  scope    :  scope
+  testname :  test_sv397003325
+
+coverage files:
+  model(design data) :  ./cov_work/scope/icc_00000000_117aa8fc.ucm
+  data               :  ./cov_work/scope/test_sv397003325/icc_00000000_117aa8fc.ucd
+TOOL:	xrun	25.03-s001: Exiting on May 10, 2026 at 16:11:59 EDT  (total: 00:00:13)
+Done

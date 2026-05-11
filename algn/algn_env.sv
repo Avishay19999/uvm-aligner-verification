@@ -10,7 +10,7 @@
     algn_env_config env_config;
     
     //APB agent handler
-    apb_agent apb_agent;
+    apb_agent apb_agent_h;
 
     //MD RX agent handler
     md_agent_master#(ALGN_DATA_WIDTH) md_rx_agent;
@@ -47,7 +47,7 @@
       env_config.set_has_checks(1);
       env_config.set_algn_data_width(ALGN_DATA_WIDTH);
       
-      apb_agent = apb_agent::type_id::create("apb_agent", this);
+      apb_agent_h = apb_agent::type_id::create("apb_agent", this);
       
       md_rx_agent = md_agent_master#(ALGN_DATA_WIDTH)::type_id::create("md_rx_agent", this);
       
@@ -95,11 +95,11 @@
       predictor.adapter = adapter;
 
       //Connect the APB monitor with the predictor
-      apb_agent.monitor.output_port.connect(predictor.bus_in);
+      apb_agent_h.monitor.output_port.connect(predictor.bus_in);
       
       //Connect the APB sequencer to the address map in order
       //to use the API of the registers to start APB transactions
-      model.reg_block.default_map.set_sequencer(apb_agent.sequencer, adapter);
+      model.reg_block.default_map.set_sequencer(apb_agent_h.sequencer, adapter);
       
       predictor.env_config = env_config;
       
@@ -122,7 +122,7 @@
         model.port_out_split_info.connect(coverage.port_in_split_info);
       end
       
-      virtual_sequencer.apb_sequencer   = apb_agent.sequencer;
+      virtual_sequencer.apb_sequencer   = apb_agent_h.sequencer;
       virtual_sequencer.md_rx_sequencer = md_sequencer_base_master'(md_rx_agent.sequencer);
       virtual_sequencer.md_tx_sequencer = md_sequencer_base_slave'(md_tx_agent.sequencer);
       virtual_sequencer.model           = model;
@@ -140,12 +140,12 @@
   
     //Task for waiting reset to start
     protected virtual task wait_reset_start();
-      apb_agent.agent_config.wait_reset_start();
+      apb_agent_h.agent_config.wait_reset_start();
     endtask
   
     //Task for waiting reset to end
     protected virtual task wait_reset_end();
-      apb_agent.agent_config.wait_reset_end();
+      apb_agent_h.agent_config.wait_reset_end();
     endtask
     
     virtual task run_phase(uvm_phase phase);

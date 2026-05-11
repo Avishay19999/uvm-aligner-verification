@@ -53,7 +53,7 @@ class uvm_ext_coverage#(type VIRTUAL_INTF = int, type ITEM_MON = uvm_sequence_it
     super.report_phase(phase);
 
     //Coverage summary printing is used here for lightweight demo/debug visibility.
-    `uvm_info("COVERAGE", $sformatf("Coverage: %0s", coverage2string()), UVM_DEBUG)
+    `uvm_info("COVERAGE", $sformatf("Coverage: %0s", coverage2string()), UVM_LOW)
   endfunction 
 
 endclass

@@ -1,0 +1,369 @@
+// ============================================================================
+// Log title: RX Error / Drop PASS — CNT_DROP + RX Scoreboard + Coverage
+// Test: algn_test_random_rx_err
+// Seed: -1744703579
+// Status: PASS
+// Suggested file name:
+// 02_rx_err_drop_pass_cnt_drop_coverage_seed_-1744703579.log
+//
+// What this log demonstrates:
+// - APB register configuration before RX traffic
+// - RX MD transactions that are expected to produce MD_ERR
+// - Reference model classifies each RX item as expected_response=MD_ERR
+// - CNT_DROP counter increments due to dropped/invalid RX items
+// - RX monitor observes the actual DUT RX response
+// - Scoreboard compares expected RX response vs actual RX response
+// - Repeated SCOREBOARD_MATCH_RX confirms correct RX error/drop behavior
+// - Functional coverage is collected and printed at the end of the run
+//
+// Main AI triage signature:
+// MODEL_RX_DECISION expected_response=MD_ERR
+// -> CNT_DROP increment
+// -> SCOREBOARD_EXPECTED_RX
+// -> SCOREBOARD_ACTUAL_RX
+// -> SCOREBOARD_MATCH_RX
+//
+// Notes:
+// - This log intentionally focuses on RX error/drop behavior.
+// - num_md_rx_transactions was reduced to keep the log readable.
+// - The log still shows 20 RX error/drop observations because the test performs
+//   multiple configuration/traffic phases.
+// - TX and split coverage may be low or zero because the checked RX items are dropped.
+// - This is expected for this specific test and is not considered a failure.
+// - This log is useful as a PASS reference log for AI-based UVM log triage.
+// ============================================================================
+
+
+[2026-05-10 19:49:25 UTC] xrun -Q -unbuffered '-timescale' '1ns/1ns' '-sysv' '-coverage' 'functional' '-svseed' 'random' '-access' '+rw' '+UVM_TESTNAME=algn_test_random_rx_err' '+UVM_VERBOSITY=UVM_LOW' '+UVM_MAX_QUIT_COUNT=1' -uvmnocdnsextra -uvmhome $UVM_HOME $UVM_HOME/src/uvm_macros.svh design.sv testbench.sv  
+TOOL:	xrun	25.03-s001: Started on May 10, 2026 at 15:49:26 EDT
+xrun: 25.03-s001: (c) Copyright 1995-2025 Cadence Design Systems, Inc.
+package md_pkg;
+             |
+xmvlog: *W,TSNSPK (md_pkg.sv,9|13): `timescale is not specified for the package.  The default timescale of 1ns/1ns will be assumed for this package.
+  package algn_test_pkg;
+                      |
+xmvlog: *W,TSNSPK (algn_test_pkg.sv,10|22): `timescale is not specified for the package.  The default timescale of 1ns/1ns will be assumed for this package.
+	Top level design units:
+		uvm_pkg
+		uvm_ext_pkg
+		algn_reg_pkg
+		md_pkg
+		apb_pkg
+		algn_pkg
+		algn_test_pkg
+		testbench
+xmelab: *W,CGPIDF: Covergroup "per_instance" option , by default, is set as 0.
+xmelab: *N,COVCGN: Coverage configuration file command "set_covergroup -new_instance_reporting" can be specified to improve the scoping and naming of covergroup instances. It may be noted that subsequent merging of a coverage database saved with this command and a coverage database saved without this command is not allowed.
+Loading snapshot worklib.testbench:sv .................... Done
+SVSEED set randomly from command line: -1744703579
+xcelium> source /xcelium25.03/tools/xcelium/files/xmsimrc
+xcelium> source /xcelium25.03/tools//methodology/UVM/CDNS-1.2/sv/files/tcl/uvm_sim.tcl
+xcelium> run
+UVM_INFO /xcelium25.03/tools/methodology/UVM/CDNS-1.2/sv/src/base/uvm_root.svh(412) @ 0: reporter [UVM/RELNOTES] 
+----------------------------------------------------------------
+CDNS-UVM-1.2 (25.03-s001)
+(C) 2007-2014 Mentor Graphics Corporation
+(C) 2007-2014 Cadence Design Systems, Inc.
+(C) 2006-2014 Synopsys, Inc.
+(C) 2011-2013 Cypress Semiconductor Corp.
+(C) 2013-2014 NVIDIA Corporation
+----------------------------------------------------------------
+
+  ***********       IMPORTANT RELEASE NOTES         ************
+
+  You are using a version of the UVM library that has been compiled
+  with `UVM_NO_DEPRECATED undefined.
+  See http://www.eda.org/svdb/view.php?id=3313 for more details.
+
+  You are using a version of the UVM library that has been compiled
+  with `UVM_OBJECT_DO_NOT_NEED_CONSTRUCTOR undefined.
+  See http://www.eda.org/svdb/view.php?id=3770 for more details.
+
+      (Specify +UVM_NO_RELNOTES to turn off this notice)
+
+xmsim: *W,PRPASZ: Packed array at "worklib.uvm_pkg::uvm_string_to_bits.uvm_string_to_bits" of 115200 bits exceeds limit of 4096 - not probed
+ Use 'probe -create -packed 115200 worklib.uvm_pkg::uvm_string_to_bits.uvm_string_to_bits' or 'setenv SHM_PACKED_LIMIT 115200' to adjust limit.
+xmsim: *W,PRPASZ: Packed array at "worklib.uvm_pkg::uvm_bits_to_string.str" of 115200 bits exceeds limit of 4096 - not probed
+ Use 'probe -create -packed 115200 worklib.uvm_pkg::uvm_bits_to_string.str' or 'setenv SHM_PACKED_LIMIT 115200' to adjust limit.
+UVM_INFO @ 0: reporter [RNTST] Running test algn_test_random_rx_err...
+UVM_INFO @ 0: reporter [MAXQUITSET] '+UVM_MAX_QUIT_COUNT=1' provided on the command line is being applied.
+UVM_INFO algn_scoreboard.sv(70) @ 3: uvm_test_top.env.scoreboard [SCOREBOARD_RESET] Clearing expected RX responses, expected TX items, expected IRQs and watchdog processes
+UVM_INFO apb_driver.sv(28) @ 100: uvm_test_top.env.apb_agent.driver [ITEM_START] Driving "default_parent_seq.item": dir: APB_WRITE, addr: 0, data: 10301, pre_drive_delay: 0, post_drive_delay: 2
+UVM_INFO apb_monitor.sv(64) @ 125: uvm_test_top.env.apb_agent.monitor [APB_MONITOR] Observed APB transaction: dir: APB_WRITE, addr: 0, data: 10301, response: APB_OKAY, length: 3, prev_item_delay: 7
+UVM_INFO apb_driver.sv(28) @ 145: uvm_test_top.env.apb_agent.driver [ITEM_START] Driving "default_parent_seq.item": dir: APB_WRITE, addr: f4, data: 13, pre_drive_delay: 4, post_drive_delay: 1
+UVM_INFO apb_monitor.sv(64) @ 215: uvm_test_top.env.apb_agent.monitor [APB_MONITOR] Observed APB transaction: dir: APB_WRITE, addr: f4, data: 13, response: APB_OKAY, length: 3, prev_item_delay: 6
+UVM_INFO apb_driver.sv(28) @ 225: uvm_test_top.env.apb_agent.driver [ITEM_START] Driving "default_parent_seq.item": dir: APB_WRITE, addr: f0, data: 9, pre_drive_delay: 2, post_drive_delay: 5
+UVM_INFO apb_monitor.sv(64) @ 275: uvm_test_top.env.apb_agent.monitor [APB_MONITOR] Observed APB transaction: dir: APB_WRITE, addr: f0, data: 9, response: APB_OKAY, length: 3, prev_item_delay: 3
+UVM_INFO md_driver_master.sv(21) @ 325: uvm_test_top.env.md_rx_agent.driver [ITEM_START] Driving "uvm_test_top.env.md_rx_agent.sequencer.seq.item": data: {'h9f, 'hc1}, offset: 1, pre_drive_delay: 4, post_drive_delay: 0
+UVM_INFO algn_model.sv(821) @ 366: uvm_test_top.env.model [MODEL_RX_DECISION] RX item evaluated by reference model: expected_response=MD_ERR, item=[366..] data: {'h9f, 'hc1}, size: 2, offset: 1, response: MD_OKAY, length: 1, prev_item_delay: 33
+UVM_INFO algn_model.sv(368) @ 366: uvm_test_top.env.model [CNT_DROP] Increment reg_block.STATUS.CNT_DROP: 1 due to: MD_ERR
+UVM_INFO algn_scoreboard.sv(211) @ 366: uvm_test_top.env.scoreboard [SCOREBOARD_EXPECTED_RX] Queued expected RX response: expected_response=MD_ERR, queue_level=1
+UVM_INFO algn_scoreboard.sv(250) @ 375: uvm_test_top.env.scoreboard [SCOREBOARD_ACTUAL_RX] Received actual RX response: actual_response=MD_ERR, actual_item=[366..375] data: {'h9f, 'hc1}, size: 2, offset: 1, response: MD_ERR, length: 1, prev_item_delay: 33
+UVM_INFO algn_scoreboard.sv(258) @ 375: uvm_test_top.env.scoreboard [SCOREBOARD_MATCH_RX] MATCH RX response: expected=MD_ERR, actual=MD_ERR
+UVM_INFO md_monitor.sv(77) @ 375: uvm_test_top.env.md_rx_agent.monitor [MD_MONITOR_END] Observed MD item: [366..375] data: {'h9f, 'hc1}, size: 2, offset: 1, response: MD_ERR, length: 1, prev_item_delay: 33
+UVM_INFO md_driver_master.sv(21) @ 375: uvm_test_top.env.md_rx_agent.driver [ITEM_START] Driving "uvm_test_top.env.md_rx_agent.sequencer.seq.item": data: {'h69, 'h6f}, offset: 1, pre_drive_delay: 3, post_drive_delay: 4
+UVM_INFO algn_model.sv(821) @ 406: uvm_test_top.env.model [MODEL_RX_DECISION] RX item evaluated by reference model: expected_response=MD_ERR, item=[406..] data: {'h69, 'h6f}, size: 2, offset: 1, response: MD_OKAY, length: 1, prev_item_delay: 3
+UVM_INFO algn_model.sv(368) @ 406: uvm_test_top.env.model [CNT_DROP] Increment reg_block.STATUS.CNT_DROP: 2 due to: MD_ERR
+UVM_INFO algn_scoreboard.sv(211) @ 406: uvm_test_top.env.scoreboard [SCOREBOARD_EXPECTED_RX] Queued expected RX response: expected_response=MD_ERR, queue_level=1
+UVM_INFO algn_scoreboard.sv(250) @ 415: uvm_test_top.env.scoreboard [SCOREBOARD_ACTUAL_RX] Received actual RX response: actual_response=MD_ERR, actual_item=[406..415] data: {'h69, 'h6f}, size: 2, offset: 1, response: MD_ERR, length: 1, prev_item_delay: 3
+UVM_INFO algn_scoreboard.sv(258) @ 415: uvm_test_top.env.scoreboard [SCOREBOARD_MATCH_RX] MATCH RX response: expected=MD_ERR, actual=MD_ERR
+UVM_INFO md_monitor.sv(77) @ 415: uvm_test_top.env.md_rx_agent.monitor [MD_MONITOR_END] Observed MD item: [406..415] data: {'h69, 'h6f}, size: 2, offset: 1, response: MD_ERR, length: 1, prev_item_delay: 3
+UVM_INFO md_driver_master.sv(21) @ 455: uvm_test_top.env.md_rx_agent.driver [ITEM_START] Driving "uvm_test_top.env.md_rx_agent.sequencer.seq.item": data: {'h46, 'he9}, offset: 1, pre_drive_delay: 0, post_drive_delay: 3
+UVM_INFO algn_model.sv(821) @ 456: uvm_test_top.env.model [MODEL_RX_DECISION] RX item evaluated by reference model: expected_response=MD_ERR, item=[456..] data: {'h46, 'he9}, size: 2, offset: 1, response: MD_OKAY, length: 1, prev_item_delay: 4
+UVM_INFO algn_model.sv(368) @ 456: uvm_test_top.env.model [CNT_DROP] Increment reg_block.STATUS.CNT_DROP: 3 due to: MD_ERR
+UVM_INFO algn_scoreboard.sv(211) @ 456: uvm_test_top.env.scoreboard [SCOREBOARD_EXPECTED_RX] Queued expected RX response: expected_response=MD_ERR, queue_level=1
+UVM_INFO algn_scoreboard.sv(250) @ 465: uvm_test_top.env.scoreboard [SCOREBOARD_ACTUAL_RX] Received actual RX response: actual_response=MD_ERR, actual_item=[456..465] data: {'h46, 'he9}, size: 2, offset: 1, response: MD_ERR, length: 1, prev_item_delay: 4
+UVM_INFO algn_scoreboard.sv(258) @ 465: uvm_test_top.env.scoreboard [SCOREBOARD_MATCH_RX] MATCH RX response: expected=MD_ERR, actual=MD_ERR
+UVM_INFO md_monitor.sv(77) @ 465: uvm_test_top.env.md_rx_agent.monitor [MD_MONITOR_END] Observed MD item: [456..465] data: {'h46, 'he9}, size: 2, offset: 1, response: MD_ERR, length: 1, prev_item_delay: 4
+UVM_INFO md_driver_master.sv(21) @ 495: uvm_test_top.env.md_rx_agent.driver [ITEM_START] Driving "uvm_test_top.env.md_rx_agent.sequencer.seq.item": data: {'hc1, 'h8a, 'h61}, offset: 0, pre_drive_delay: 5, post_drive_delay: 4
+UVM_INFO algn_model.sv(821) @ 546: uvm_test_top.env.model [MODEL_RX_DECISION] RX item evaluated by reference model: expected_response=MD_ERR, item=[546..] data: {'hc1, 'h8a, 'h61}, size: 3, offset: 0, response: MD_OKAY, length: 1, prev_item_delay: 8
+UVM_INFO algn_model.sv(368) @ 546: uvm_test_top.env.model [CNT_DROP] Increment reg_block.STATUS.CNT_DROP: 4 due to: MD_ERR
+UVM_INFO algn_scoreboard.sv(211) @ 546: uvm_test_top.env.scoreboard [SCOREBOARD_EXPECTED_RX] Queued expected RX response: expected_response=MD_ERR, queue_level=1
+UVM_INFO algn_scoreboard.sv(250) @ 555: uvm_test_top.env.scoreboard [SCOREBOARD_ACTUAL_RX] Received actual RX response: actual_response=MD_ERR, actual_item=[546..555] data: {'hc1, 'h8a, 'h61}, size: 3, offset: 0, response: MD_ERR, length: 1, prev_item_delay: 8
+UVM_INFO algn_scoreboard.sv(258) @ 555: uvm_test_top.env.scoreboard [SCOREBOARD_MATCH_RX] MATCH RX response: expected=MD_ERR, actual=MD_ERR
+UVM_INFO md_monitor.sv(77) @ 555: uvm_test_top.env.md_rx_agent.monitor [MD_MONITOR_END] Observed MD item: [546..555] data: {'hc1, 'h8a, 'h61}, size: 3, offset: 0, response: MD_ERR, length: 1, prev_item_delay: 8
+UVM_INFO md_driver_master.sv(21) @ 595: uvm_test_top.env.md_rx_agent.driver [ITEM_START] Driving "uvm_test_top.env.md_rx_agent.sequencer.seq.item": data: {'hfd, 'h91, 'h2c}, offset: 1, pre_drive_delay: 3, post_drive_delay: 4
+UVM_INFO algn_model.sv(821) @ 626: uvm_test_top.env.model [MODEL_RX_DECISION] RX item evaluated by reference model: expected_response=MD_ERR, item=[626..] data: {'hfd, 'h91, 'h2c}, size: 3, offset: 1, response: MD_OKAY, length: 1, prev_item_delay: 7
+UVM_INFO algn_model.sv(368) @ 626: uvm_test_top.env.model [CNT_DROP] Increment reg_block.STATUS.CNT_DROP: 5 due to: MD_ERR
+UVM_INFO algn_scoreboard.sv(211) @ 626: uvm_test_top.env.scoreboard [SCOREBOARD_EXPECTED_RX] Queued expected RX response: expected_response=MD_ERR, queue_level=1
+UVM_INFO algn_scoreboard.sv(250) @ 635: uvm_test_top.env.scoreboard [SCOREBOARD_ACTUAL_RX] Received actual RX response: actual_response=MD_ERR, actual_item=[626..635] data: {'hfd, 'h91, 'h2c}, size: 3, offset: 1, response: MD_ERR, length: 1, prev_item_delay: 7
+UVM_INFO algn_scoreboard.sv(258) @ 635: uvm_test_top.env.scoreboard [SCOREBOARD_MATCH_RX] MATCH RX response: expected=MD_ERR, actual=MD_ERR
+UVM_INFO md_monitor.sv(77) @ 635: uvm_test_top.env.md_rx_agent.monitor [MD_MONITOR_END] Observed MD item: [626..635] data: {'hfd, 'h91, 'h2c}, size: 3, offset: 1, response: MD_ERR, length: 1, prev_item_delay: 7
+UVM_INFO md_driver_master.sv(21) @ 675: uvm_test_top.env.md_rx_agent.driver [ITEM_START] Driving "uvm_test_top.env.md_rx_agent.sequencer.seq.item": data: {'hd8, 'h31}, offset: 1, pre_drive_delay: 4, post_drive_delay: 3
+UVM_INFO algn_model.sv(821) @ 716: uvm_test_top.env.model [MODEL_RX_DECISION] RX item evaluated by reference model: expected_response=MD_ERR, item=[716..] data: {'hd8, 'h31}, size: 2, offset: 1, response: MD_OKAY, length: 1, prev_item_delay: 8
+UVM_INFO algn_model.sv(368) @ 716: uvm_test_top.env.model [CNT_DROP] Increment reg_block.STATUS.CNT_DROP: 6 due to: MD_ERR
+UVM_INFO algn_scoreboard.sv(211) @ 716: uvm_test_top.env.scoreboard [SCOREBOARD_EXPECTED_RX] Queued expected RX response: expected_response=MD_ERR, queue_level=1
+UVM_INFO algn_scoreboard.sv(250) @ 725: uvm_test_top.env.scoreboard [SCOREBOARD_ACTUAL_RX] Received actual RX response: actual_response=MD_ERR, actual_item=[716..725] data: {'hd8, 'h31}, size: 2, offset: 1, response: MD_ERR, length: 1, prev_item_delay: 8
+UVM_INFO algn_scoreboard.sv(258) @ 725: uvm_test_top.env.scoreboard [SCOREBOARD_MATCH_RX] MATCH RX response: expected=MD_ERR, actual=MD_ERR
+UVM_INFO md_monitor.sv(77) @ 725: uvm_test_top.env.md_rx_agent.monitor [MD_MONITOR_END] Observed MD item: [716..725] data: {'hd8, 'h31}, size: 2, offset: 1, response: MD_ERR, length: 1, prev_item_delay: 8
+UVM_INFO md_driver_master.sv(21) @ 755: uvm_test_top.env.md_rx_agent.driver [ITEM_START] Driving "uvm_test_top.env.md_rx_agent.sequencer.seq.item": data: {'h82, 'h3b, 'h9c}, offset: 1, pre_drive_delay: 1, post_drive_delay: 2
+UVM_INFO algn_model.sv(821) @ 766: uvm_test_top.env.model [MODEL_RX_DECISION] RX item evaluated by reference model: expected_response=MD_ERR, item=[766..] data: {'h82, 'h3b, 'h9c}, size: 3, offset: 1, response: MD_OKAY, length: 1, prev_item_delay: 4
+UVM_INFO algn_model.sv(368) @ 766: uvm_test_top.env.model [CNT_DROP] Increment reg_block.STATUS.CNT_DROP: 7 due to: MD_ERR
+UVM_INFO algn_scoreboard.sv(211) @ 766: uvm_test_top.env.scoreboard [SCOREBOARD_EXPECTED_RX] Queued expected RX response: expected_response=MD_ERR, queue_level=1
+UVM_INFO algn_scoreboard.sv(250) @ 775: uvm_test_top.env.scoreboard [SCOREBOARD_ACTUAL_RX] Received actual RX response: actual_response=MD_ERR, actual_item=[766..775] data: {'h82, 'h3b, 'h9c}, size: 3, offset: 1, response: MD_ERR, length: 1, prev_item_delay: 4
+UVM_INFO algn_scoreboard.sv(258) @ 775: uvm_test_top.env.scoreboard [SCOREBOARD_MATCH_RX] MATCH RX response: expected=MD_ERR, actual=MD_ERR
+UVM_INFO md_monitor.sv(77) @ 775: uvm_test_top.env.md_rx_agent.monitor [MD_MONITOR_END] Observed MD item: [766..775] data: {'h82, 'h3b, 'h9c}, size: 3, offset: 1, response: MD_ERR, length: 1, prev_item_delay: 4
+UVM_INFO md_driver_master.sv(21) @ 795: uvm_test_top.env.md_rx_agent.driver [ITEM_START] Driving "uvm_test_top.env.md_rx_agent.sequencer.seq.item": data: {'h28, 'h67}, offset: 1, pre_drive_delay: 1, post_drive_delay: 4
+UVM_INFO algn_model.sv(821) @ 806: uvm_test_top.env.model [MODEL_RX_DECISION] RX item evaluated by reference model: expected_response=MD_ERR, item=[806..] data: {'h28, 'h67}, size: 2, offset: 1, response: MD_OKAY, length: 1, prev_item_delay: 3
+UVM_INFO algn_model.sv(368) @ 806: uvm_test_top.env.model [CNT_DROP] Increment reg_block.STATUS.CNT_DROP: 8 due to: MD_ERR
+UVM_INFO algn_scoreboard.sv(211) @ 806: uvm_test_top.env.scoreboard [SCOREBOARD_EXPECTED_RX] Queued expected RX response: expected_response=MD_ERR, queue_level=1
+UVM_INFO algn_scoreboard.sv(250) @ 815: uvm_test_top.env.scoreboard [SCOREBOARD_ACTUAL_RX] Received actual RX response: actual_response=MD_ERR, actual_item=[806..815] data: {'h28, 'h67}, size: 2, offset: 1, response: MD_ERR, length: 1, prev_item_delay: 3
+UVM_INFO algn_scoreboard.sv(258) @ 815: uvm_test_top.env.scoreboard [SCOREBOARD_MATCH_RX] MATCH RX response: expected=MD_ERR, actual=MD_ERR
+UVM_INFO md_monitor.sv(77) @ 815: uvm_test_top.env.md_rx_agent.monitor [MD_MONITOR_END] Observed MD item: [806..815] data: {'h28, 'h67}, size: 2, offset: 1, response: MD_ERR, length: 1, prev_item_delay: 3
+UVM_INFO md_driver_master.sv(21) @ 855: uvm_test_top.env.md_rx_agent.driver [ITEM_START] Driving "uvm_test_top.env.md_rx_agent.sequencer.seq.item": data: {'h31, 'h05}, offset: 1, pre_drive_delay: 5, post_drive_delay: 3
+UVM_INFO algn_model.sv(821) @ 906: uvm_test_top.env.model [MODEL_RX_DECISION] RX item evaluated by reference model: expected_response=MD_ERR, item=[906..] data: {'h31, 'h05}, size: 2, offset: 1, response: MD_OKAY, length: 1, prev_item_delay: 9
+UVM_INFO algn_model.sv(368) @ 906: uvm_test_top.env.model [CNT_DROP] Increment reg_block.STATUS.CNT_DROP: 9 due to: MD_ERR
+UVM_INFO algn_scoreboard.sv(211) @ 906: uvm_test_top.env.scoreboard [SCOREBOARD_EXPECTED_RX] Queued expected RX response: expected_response=MD_ERR, queue_level=1
+UVM_INFO algn_scoreboard.sv(250) @ 915: uvm_test_top.env.scoreboard [SCOREBOARD_ACTUAL_RX] Received actual RX response: actual_response=MD_ERR, actual_item=[906..915] data: {'h31, 'h05}, size: 2, offset: 1, response: MD_ERR, length: 1, prev_item_delay: 9
+UVM_INFO algn_scoreboard.sv(258) @ 915: uvm_test_top.env.scoreboard [SCOREBOARD_MATCH_RX] MATCH RX response: expected=MD_ERR, actual=MD_ERR
+UVM_INFO md_monitor.sv(77) @ 915: uvm_test_top.env.md_rx_agent.monitor [MD_MONITOR_END] Observed MD item: [906..915] data: {'h31, 'h05}, size: 2, offset: 1, response: MD_ERR, length: 1, prev_item_delay: 9
+UVM_INFO md_driver_master.sv(21) @ 945: uvm_test_top.env.md_rx_agent.driver [ITEM_START] Driving "uvm_test_top.env.md_rx_agent.sequencer.seq.item": data: {'hee, 'h03, 'hc4}, offset: 0, pre_drive_delay: 5, post_drive_delay: 4
+UVM_INFO algn_model.sv(821) @ 996: uvm_test_top.env.model [MODEL_RX_DECISION] RX item evaluated by reference model: expected_response=MD_ERR, item=[996..] data: {'hee, 'h03, 'hc4}, size: 3, offset: 0, response: MD_OKAY, length: 1, prev_item_delay: 8
+UVM_INFO algn_model.sv(368) @ 996: uvm_test_top.env.model [CNT_DROP] Increment reg_block.STATUS.CNT_DROP: 10 due to: MD_ERR
+UVM_INFO algn_scoreboard.sv(211) @ 996: uvm_test_top.env.scoreboard [SCOREBOARD_EXPECTED_RX] Queued expected RX response: expected_response=MD_ERR, queue_level=1
+UVM_INFO algn_scoreboard.sv(250) @ 1005: uvm_test_top.env.scoreboard [SCOREBOARD_ACTUAL_RX] Received actual RX response: actual_response=MD_ERR, actual_item=[996..1005] data: {'hee, 'h03, 'hc4}, size: 3, offset: 0, response: MD_ERR, length: 1, prev_item_delay: 8
+UVM_INFO algn_scoreboard.sv(258) @ 1005: uvm_test_top.env.scoreboard [SCOREBOARD_MATCH_RX] MATCH RX response: expected=MD_ERR, actual=MD_ERR
+UVM_INFO md_monitor.sv(77) @ 1005: uvm_test_top.env.md_rx_agent.monitor [MD_MONITOR_END] Observed MD item: [996..1005] data: {'hee, 'h03, 'hc4}, size: 3, offset: 0, response: MD_ERR, length: 1, prev_item_delay: 8
+UVM_INFO apb_driver.sv(28) @ 2045: uvm_test_top.env.apb_agent.driver [ITEM_START] Driving "default_parent_seq.item": dir: APB_READ, addr: c, pre_drive_delay: 2, post_drive_delay: 5
+UVM_INFO apb_monitor.sv(64) @ 2095: uvm_test_top.env.apb_agent.monitor [APB_MONITOR] Observed APB transaction: dir: APB_READ, addr: c, data: a, response: APB_OKAY, length: 3, prev_item_delay: 179
+UVM_INFO apb_driver.sv(28) @ 2145: uvm_test_top.env.apb_agent.driver [ITEM_START] Driving "default_parent_seq.item": dir: APB_WRITE, addr: f0, data: 11, pre_drive_delay: 3, post_drive_delay: 2
+UVM_INFO apb_monitor.sv(64) @ 2205: uvm_test_top.env.apb_agent.monitor [APB_MONITOR] Observed APB transaction: dir: APB_WRITE, addr: f0, data: 11, response: APB_OKAY, length: 3, prev_item_delay: 8
+UVM_INFO apb_driver.sv(28) @ 2225: uvm_test_top.env.apb_agent.driver [ITEM_START] Driving "default_parent_seq.item": dir: APB_WRITE, addr: f4, data: 4, pre_drive_delay: 4, post_drive_delay: 1
+UVM_INFO apb_monitor.sv(64) @ 2295: uvm_test_top.env.apb_agent.monitor [APB_MONITOR] Observed APB transaction: dir: APB_WRITE, addr: f4, data: 4, response: APB_OKAY, length: 3, prev_item_delay: 6
+UVM_INFO apb_driver.sv(28) @ 2305: uvm_test_top.env.apb_agent.driver [ITEM_START] Driving "default_parent_seq.item": dir: APB_WRITE, addr: 0, data: 4, pre_drive_delay: 0, post_drive_delay: 5
+UVM_INFO apb_monitor.sv(64) @ 2335: uvm_test_top.env.apb_agent.monitor [APB_MONITOR] Observed APB transaction: dir: APB_WRITE, addr: 0, data: 4, response: APB_OKAY, length: 3, prev_item_delay: 1
+UVM_INFO md_driver_master.sv(21) @ 2385: uvm_test_top.env.md_rx_agent.driver [ITEM_START] Driving "uvm_test_top.env.md_rx_agent.sequencer.seq.item": data: {'ha5, 'hfb}, offset: 1, pre_drive_delay: 4, post_drive_delay: 3
+UVM_INFO algn_model.sv(821) @ 2426: uvm_test_top.env.model [MODEL_RX_DECISION] RX item evaluated by reference model: expected_response=MD_ERR, item=[2426..] data: {'ha5, 'hfb}, size: 2, offset: 1, response: MD_OKAY, length: 1, prev_item_delay: 142
+UVM_INFO algn_model.sv(368) @ 2426: uvm_test_top.env.model [CNT_DROP] Increment reg_block.STATUS.CNT_DROP: 11 due to: MD_ERR
+UVM_INFO algn_scoreboard.sv(211) @ 2426: uvm_test_top.env.scoreboard [SCOREBOARD_EXPECTED_RX] Queued expected RX response: expected_response=MD_ERR, queue_level=1
+UVM_INFO algn_scoreboard.sv(250) @ 2435: uvm_test_top.env.scoreboard [SCOREBOARD_ACTUAL_RX] Received actual RX response: actual_response=MD_ERR, actual_item=[2426..2435] data: {'ha5, 'hfb}, size: 2, offset: 1, response: MD_ERR, length: 1, prev_item_delay: 142
+UVM_INFO algn_scoreboard.sv(258) @ 2435: uvm_test_top.env.scoreboard [SCOREBOARD_MATCH_RX] MATCH RX response: expected=MD_ERR, actual=MD_ERR
+UVM_INFO md_monitor.sv(77) @ 2435: uvm_test_top.env.md_rx_agent.monitor [MD_MONITOR_END] Observed MD item: [2426..2435] data: {'ha5, 'hfb}, size: 2, offset: 1, response: MD_ERR, length: 1, prev_item_delay: 142
+UVM_INFO md_driver_master.sv(21) @ 2465: uvm_test_top.env.md_rx_agent.driver [ITEM_START] Driving "uvm_test_top.env.md_rx_agent.sequencer.seq.item": data: {'hbc, 'hd1}, offset: 1, pre_drive_delay: 3, post_drive_delay: 4
+UVM_INFO algn_model.sv(821) @ 2496: uvm_test_top.env.model [MODEL_RX_DECISION] RX item evaluated by reference model: expected_response=MD_ERR, item=[2496..] data: {'hbc, 'hd1}, size: 2, offset: 1, response: MD_OKAY, length: 1, prev_item_delay: 6
+UVM_INFO algn_model.sv(368) @ 2496: uvm_test_top.env.model [CNT_DROP] Increment reg_block.STATUS.CNT_DROP: 12 due to: MD_ERR
+UVM_INFO algn_scoreboard.sv(211) @ 2496: uvm_test_top.env.scoreboard [SCOREBOARD_EXPECTED_RX] Queued expected RX response: expected_response=MD_ERR, queue_level=1
+UVM_INFO algn_scoreboard.sv(250) @ 2505: uvm_test_top.env.scoreboard [SCOREBOARD_ACTUAL_RX] Received actual RX response: actual_response=MD_ERR, actual_item=[2496..2505] data: {'hbc, 'hd1}, size: 2, offset: 1, response: MD_ERR, length: 1, prev_item_delay: 6
+UVM_INFO algn_scoreboard.sv(258) @ 2505: uvm_test_top.env.scoreboard [SCOREBOARD_MATCH_RX] MATCH RX response: expected=MD_ERR, actual=MD_ERR
+UVM_INFO md_monitor.sv(77) @ 2505: uvm_test_top.env.md_rx_agent.monitor [MD_MONITOR_END] Observed MD item: [2496..2505] data: {'hbc, 'hd1}, size: 2, offset: 1, response: MD_ERR, length: 1, prev_item_delay: 6
+UVM_INFO md_driver_master.sv(21) @ 2545: uvm_test_top.env.md_rx_agent.driver [ITEM_START] Driving "uvm_test_top.env.md_rx_agent.sequencer.seq.item": data: {'ha2, 'h94}, offset: 1, pre_drive_delay: 4, post_drive_delay: 4
+UVM_INFO algn_model.sv(821) @ 2586: uvm_test_top.env.model [MODEL_RX_DECISION] RX item evaluated by reference model: expected_response=MD_ERR, item=[2586..] data: {'ha2, 'h94}, size: 2, offset: 1, response: MD_OKAY, length: 1, prev_item_delay: 8
+UVM_INFO algn_model.sv(368) @ 2586: uvm_test_top.env.model [CNT_DROP] Increment reg_block.STATUS.CNT_DROP: 13 due to: MD_ERR
+UVM_INFO algn_scoreboard.sv(211) @ 2586: uvm_test_top.env.scoreboard [SCOREBOARD_EXPECTED_RX] Queued expected RX response: expected_response=MD_ERR, queue_level=1
+UVM_INFO algn_scoreboard.sv(250) @ 2595: uvm_test_top.env.scoreboard [SCOREBOARD_ACTUAL_RX] Received actual RX response: actual_response=MD_ERR, actual_item=[2586..2595] data: {'ha2, 'h94}, size: 2, offset: 1, response: MD_ERR, length: 1, prev_item_delay: 8
+UVM_INFO algn_scoreboard.sv(258) @ 2595: uvm_test_top.env.scoreboard [SCOREBOARD_MATCH_RX] MATCH RX response: expected=MD_ERR, actual=MD_ERR
+UVM_INFO md_monitor.sv(77) @ 2595: uvm_test_top.env.md_rx_agent.monitor [MD_MONITOR_END] Observed MD item: [2586..2595] data: {'ha2, 'h94}, size: 2, offset: 1, response: MD_ERR, length: 1, prev_item_delay: 8
+UVM_INFO md_driver_master.sv(21) @ 2635: uvm_test_top.env.md_rx_agent.driver [ITEM_START] Driving "uvm_test_top.env.md_rx_agent.sequencer.seq.item": data: {'hcf, 'haa}, offset: 1, pre_drive_delay: 3, post_drive_delay: 2
+UVM_INFO algn_model.sv(821) @ 2666: uvm_test_top.env.model [MODEL_RX_DECISION] RX item evaluated by reference model: expected_response=MD_ERR, item=[2666..] data: {'hcf, 'haa}, size: 2, offset: 1, response: MD_OKAY, length: 1, prev_item_delay: 7
+UVM_INFO algn_model.sv(368) @ 2666: uvm_test_top.env.model [CNT_DROP] Increment reg_block.STATUS.CNT_DROP: 14 due to: MD_ERR
+UVM_INFO algn_scoreboard.sv(211) @ 2666: uvm_test_top.env.scoreboard [SCOREBOARD_EXPECTED_RX] Queued expected RX response: expected_response=MD_ERR, queue_level=1
+UVM_INFO algn_scoreboard.sv(250) @ 2675: uvm_test_top.env.scoreboard [SCOREBOARD_ACTUAL_RX] Received actual RX response: actual_response=MD_ERR, actual_item=[2666..2675] data: {'hcf, 'haa}, size: 2, offset: 1, response: MD_ERR, length: 1, prev_item_delay: 7
+UVM_INFO algn_scoreboard.sv(258) @ 2675: uvm_test_top.env.scoreboard [SCOREBOARD_MATCH_RX] MATCH RX response: expected=MD_ERR, actual=MD_ERR
+UVM_INFO md_monitor.sv(77) @ 2675: uvm_test_top.env.md_rx_agent.monitor [MD_MONITOR_END] Observed MD item: [2666..2675] data: {'hcf, 'haa}, size: 2, offset: 1, response: MD_ERR, length: 1, prev_item_delay: 7
+UVM_INFO md_driver_master.sv(21) @ 2695: uvm_test_top.env.md_rx_agent.driver [ITEM_START] Driving "uvm_test_top.env.md_rx_agent.sequencer.seq.item": data: {'hbf, 'h98, 'h00}, offset: 1, pre_drive_delay: 5, post_drive_delay: 5
+UVM_INFO algn_model.sv(821) @ 2746: uvm_test_top.env.model [MODEL_RX_DECISION] RX item evaluated by reference model: expected_response=MD_ERR, item=[2746..] data: {'hbf, 'h98, 'h00}, size: 3, offset: 1, response: MD_OKAY, length: 1, prev_item_delay: 7
+UVM_INFO algn_model.sv(368) @ 2746: uvm_test_top.env.model [CNT_DROP] Increment reg_block.STATUS.CNT_DROP: 15 due to: MD_ERR
+UVM_INFO algn_scoreboard.sv(211) @ 2746: uvm_test_top.env.scoreboard [SCOREBOARD_EXPECTED_RX] Queued expected RX response: expected_response=MD_ERR, queue_level=1
+UVM_INFO algn_scoreboard.sv(250) @ 2755: uvm_test_top.env.scoreboard [SCOREBOARD_ACTUAL_RX] Received actual RX response: actual_response=MD_ERR, actual_item=[2746..2755] data: {'hbf, 'h98, 'h00}, size: 3, offset: 1, response: MD_ERR, length: 1, prev_item_delay: 7
+UVM_INFO algn_scoreboard.sv(258) @ 2755: uvm_test_top.env.scoreboard [SCOREBOARD_MATCH_RX] MATCH RX response: expected=MD_ERR, actual=MD_ERR
+UVM_INFO md_monitor.sv(77) @ 2755: uvm_test_top.env.md_rx_agent.monitor [MD_MONITOR_END] Observed MD item: [2746..2755] data: {'hbf, 'h98, 'h00}, size: 3, offset: 1, response: MD_ERR, length: 1, prev_item_delay: 7
+UVM_INFO md_driver_master.sv(21) @ 2805: uvm_test_top.env.md_rx_agent.driver [ITEM_START] Driving "uvm_test_top.env.md_rx_agent.sequencer.seq.item": data: {'hb1, 'he5}, offset: 1, pre_drive_delay: 4, post_drive_delay: 3
+UVM_INFO algn_model.sv(821) @ 2846: uvm_test_top.env.model [MODEL_RX_DECISION] RX item evaluated by reference model: expected_response=MD_ERR, item=[2846..] data: {'hb1, 'he5}, size: 2, offset: 1, response: MD_OKAY, length: 1, prev_item_delay: 9
+UVM_INFO algn_model.sv(368) @ 2846: uvm_test_top.env.model [CNT_DROP] Increment reg_block.STATUS.CNT_DROP: 16 due to: MD_ERR
+UVM_INFO algn_scoreboard.sv(211) @ 2846: uvm_test_top.env.scoreboard [SCOREBOARD_EXPECTED_RX] Queued expected RX response: expected_response=MD_ERR, queue_level=1
+UVM_INFO algn_scoreboard.sv(250) @ 2855: uvm_test_top.env.scoreboard [SCOREBOARD_ACTUAL_RX] Received actual RX response: actual_response=MD_ERR, actual_item=[2846..2855] data: {'hb1, 'he5}, size: 2, offset: 1, response: MD_ERR, length: 1, prev_item_delay: 9
+UVM_INFO algn_scoreboard.sv(258) @ 2855: uvm_test_top.env.scoreboard [SCOREBOARD_MATCH_RX] MATCH RX response: expected=MD_ERR, actual=MD_ERR
+UVM_INFO md_monitor.sv(77) @ 2855: uvm_test_top.env.md_rx_agent.monitor [MD_MONITOR_END] Observed MD item: [2846..2855] data: {'hb1, 'he5}, size: 2, offset: 1, response: MD_ERR, length: 1, prev_item_delay: 9
+UVM_INFO md_driver_master.sv(21) @ 2885: uvm_test_top.env.md_rx_agent.driver [ITEM_START] Driving "uvm_test_top.env.md_rx_agent.sequencer.seq.item": data: {'h43, 'hb9}, offset: 1, pre_drive_delay: 1, post_drive_delay: 3
+UVM_INFO algn_model.sv(821) @ 2896: uvm_test_top.env.model [MODEL_RX_DECISION] RX item evaluated by reference model: expected_response=MD_ERR, item=[2896..] data: {'h43, 'hb9}, size: 2, offset: 1, response: MD_OKAY, length: 1, prev_item_delay: 4
+UVM_INFO algn_model.sv(368) @ 2896: uvm_test_top.env.model [CNT_DROP] Increment reg_block.STATUS.CNT_DROP: 17 due to: MD_ERR
+UVM_INFO algn_scoreboard.sv(211) @ 2896: uvm_test_top.env.scoreboard [SCOREBOARD_EXPECTED_RX] Queued expected RX response: expected_response=MD_ERR, queue_level=1
+UVM_INFO algn_scoreboard.sv(250) @ 2905: uvm_test_top.env.scoreboard [SCOREBOARD_ACTUAL_RX] Received actual RX response: actual_response=MD_ERR, actual_item=[2896..2905] data: {'h43, 'hb9}, size: 2, offset: 1, response: MD_ERR, length: 1, prev_item_delay: 4
+UVM_INFO algn_scoreboard.sv(258) @ 2905: uvm_test_top.env.scoreboard [SCOREBOARD_MATCH_RX] MATCH RX response: expected=MD_ERR, actual=MD_ERR
+UVM_INFO md_monitor.sv(77) @ 2905: uvm_test_top.env.md_rx_agent.monitor [MD_MONITOR_END] Observed MD item: [2896..2905] data: {'h43, 'hb9}, size: 2, offset: 1, response: MD_ERR, length: 1, prev_item_delay: 4
+UVM_INFO md_driver_master.sv(21) @ 2935: uvm_test_top.env.md_rx_agent.driver [ITEM_START] Driving "uvm_test_top.env.md_rx_agent.sequencer.seq.item": data: {'h08, 'h0d}, offset: 1, pre_drive_delay: 0, post_drive_delay: 1
+UVM_INFO algn_model.sv(821) @ 2936: uvm_test_top.env.model [MODEL_RX_DECISION] RX item evaluated by reference model: expected_response=MD_ERR, item=[2936..] data: {'h08, 'h0d}, size: 2, offset: 1, response: MD_OKAY, length: 1, prev_item_delay: 3
+UVM_INFO algn_model.sv(368) @ 2936: uvm_test_top.env.model [CNT_DROP] Increment reg_block.STATUS.CNT_DROP: 18 due to: MD_ERR
+UVM_INFO algn_scoreboard.sv(211) @ 2936: uvm_test_top.env.scoreboard [SCOREBOARD_EXPECTED_RX] Queued expected RX response: expected_response=MD_ERR, queue_level=1
+UVM_INFO algn_scoreboard.sv(250) @ 2945: uvm_test_top.env.scoreboard [SCOREBOARD_ACTUAL_RX] Received actual RX response: actual_response=MD_ERR, actual_item=[2936..2945] data: {'h08, 'h0d}, size: 2, offset: 1, response: MD_ERR, length: 1, prev_item_delay: 3
+UVM_INFO algn_scoreboard.sv(258) @ 2945: uvm_test_top.env.scoreboard [SCOREBOARD_MATCH_RX] MATCH RX response: expected=MD_ERR, actual=MD_ERR
+UVM_INFO md_monitor.sv(77) @ 2945: uvm_test_top.env.md_rx_agent.monitor [MD_MONITOR_END] Observed MD item: [2936..2945] data: {'h08, 'h0d}, size: 2, offset: 1, response: MD_ERR, length: 1, prev_item_delay: 3
+UVM_INFO md_driver_master.sv(21) @ 2955: uvm_test_top.env.md_rx_agent.driver [ITEM_START] Driving "uvm_test_top.env.md_rx_agent.sequencer.seq.item": data: {'h31, 'hb2, 'h53}, offset: 0, pre_drive_delay: 1, post_drive_delay: 3
+UVM_INFO algn_model.sv(821) @ 2966: uvm_test_top.env.model [MODEL_RX_DECISION] RX item evaluated by reference model: expected_response=MD_ERR, item=[2966..] data: {'h31, 'hb2, 'h53}, size: 3, offset: 0, response: MD_OKAY, length: 1, prev_item_delay: 2
+UVM_INFO algn_model.sv(368) @ 2966: uvm_test_top.env.model [CNT_DROP] Increment reg_block.STATUS.CNT_DROP: 19 due to: MD_ERR
+UVM_INFO algn_scoreboard.sv(211) @ 2966: uvm_test_top.env.scoreboard [SCOREBOARD_EXPECTED_RX] Queued expected RX response: expected_response=MD_ERR, queue_level=1
+UVM_INFO algn_scoreboard.sv(250) @ 2975: uvm_test_top.env.scoreboard [SCOREBOARD_ACTUAL_RX] Received actual RX response: actual_response=MD_ERR, actual_item=[2966..2975] data: {'h31, 'hb2, 'h53}, size: 3, offset: 0, response: MD_ERR, length: 1, prev_item_delay: 2
+UVM_INFO algn_scoreboard.sv(258) @ 2975: uvm_test_top.env.scoreboard [SCOREBOARD_MATCH_RX] MATCH RX response: expected=MD_ERR, actual=MD_ERR
+UVM_INFO md_monitor.sv(77) @ 2975: uvm_test_top.env.md_rx_agent.monitor [MD_MONITOR_END] Observed MD item: [2966..2975] data: {'h31, 'hb2, 'h53}, size: 3, offset: 0, response: MD_ERR, length: 1, prev_item_delay: 2
+UVM_INFO md_driver_master.sv(21) @ 3005: uvm_test_top.env.md_rx_agent.driver [ITEM_START] Driving "uvm_test_top.env.md_rx_agent.sequencer.seq.item": data: {'h58, 'h00}, offset: 1, pre_drive_delay: 2, post_drive_delay: 2
+UVM_INFO algn_model.sv(821) @ 3026: uvm_test_top.env.model [MODEL_RX_DECISION] RX item evaluated by reference model: expected_response=MD_ERR, item=[3026..] data: {'h58, 'h00}, size: 2, offset: 1, response: MD_OKAY, length: 1, prev_item_delay: 5
+UVM_INFO algn_model.sv(368) @ 3026: uvm_test_top.env.model [CNT_DROP] Increment reg_block.STATUS.CNT_DROP: 20 due to: MD_ERR
+UVM_INFO algn_scoreboard.sv(211) @ 3026: uvm_test_top.env.scoreboard [SCOREBOARD_EXPECTED_RX] Queued expected RX response: expected_response=MD_ERR, queue_level=1
+UVM_INFO algn_scoreboard.sv(250) @ 3035: uvm_test_top.env.scoreboard [SCOREBOARD_ACTUAL_RX] Received actual RX response: actual_response=MD_ERR, actual_item=[3026..3035] data: {'h58, 'h00}, size: 2, offset: 1, response: MD_ERR, length: 1, prev_item_delay: 5
+UVM_INFO algn_scoreboard.sv(258) @ 3035: uvm_test_top.env.scoreboard [SCOREBOARD_MATCH_RX] MATCH RX response: expected=MD_ERR, actual=MD_ERR
+UVM_INFO md_monitor.sv(77) @ 3035: uvm_test_top.env.md_rx_agent.monitor [MD_MONITOR_END] Observed MD item: [3026..3035] data: {'h58, 'h00}, size: 2, offset: 1, response: MD_ERR, length: 1, prev_item_delay: 5
+UVM_INFO apb_driver.sv(28) @ 4055: uvm_test_top.env.apb_agent.driver [ITEM_START] Driving "default_parent_seq.item": dir: APB_READ, addr: c, pre_drive_delay: 5, post_drive_delay: 5
+UVM_INFO apb_monitor.sv(64) @ 4135: uvm_test_top.env.apb_agent.monitor [APB_MONITOR] Observed APB transaction: dir: APB_READ, addr: c, data: 14, response: APB_OKAY, length: 3, prev_item_delay: 177
+UVM_INFO /xcelium25.03/tools/methodology/UVM/CDNS-1.2/sv/src/base/uvm_objection.svh(1271) @ 4685: reporter [TEST_DONE] 'run' phase is ready to proceed to the 'extract' phase
+UVM_INFO uvm_ext_coverage.sv(56) @ 4685: uvm_test_top.env.apb_agent.coverage [COVERAGE] Coverage: 
+   cover_item:              54.64%
+      direction:            100.00%
+      trans_direction:      75.00%
+      response:             50.00%
+      response_x_direction: 50.00%
+      length:               10.00%
+      prev_item_delay:      42.86%
+                                    
+   cover_reset:             50.00%
+      access_ongoing:       50.00%
+
+Child component: wrap_cover_addr_0
+   cover_index:              100.00%
+      index:                 100.00%
+
+Child component: wrap_cover_addr_1
+   cover_index:              37.50%
+      index:                 37.50%
+
+Child component: wrap_cover_rd_data_0
+   cover_index:              100.00%
+      index:                 100.00%
+
+Child component: wrap_cover_rd_data_1
+   cover_index:              12.50%
+      index:                 12.50%
+
+Child component: wrap_cover_wr_data_0
+   cover_index:              100.00%
+      index:                 100.00%
+
+Child component: wrap_cover_wr_data_1
+   cover_index:              25.00%
+      index:                 25.00%
+UVM_INFO algn_coverage.sv(98) @ 4685: uvm_test_top.env.coverage [COVERAGE] Coverage: 
+   cover_split:            0.00%
+      ctrl_offset:         0.00%
+      ctrl_size:           0.00%
+      md_offset:           0.00%
+      md_size:             0.00%
+      num_bytes_needed:    0.00%
+      all:                 0.00%
+UVM_INFO uvm_ext_coverage.sv(56) @ 4685: uvm_test_top.env.md_rx_agent.coverage [COVERAGE] Coverage: 
+   cover_item:         51.75%
+      offset:          50.00%
+      size:            50.00%
+      response:        100.00%
+      length:          9.09%
+      prev_item_delay: 71.43%
+      offset_x_size:   30.00%
+                                    
+   cover_reset:        50.00%
+      access_ongoing:  50.00%
+
+Child component: wrap_cover_data_0
+   cover_index:              100.00%
+      index:                 100.00%
+
+Child component: wrap_cover_data_1
+   cover_index:              90.62%
+      index:                 90.62%
+UVM_INFO uvm_ext_coverage.sv(56) @ 4685: uvm_test_top.env.md_tx_agent.coverage [COVERAGE] Coverage: 
+   cover_item:         0.00%
+      offset:          0.00%
+      size:            0.00%
+      response:        0.00%
+      length:          0.00%
+      prev_item_delay: 0.00%
+      offset_x_size:   0.00%
+                                    
+   cover_reset:        50.00%
+      access_ongoing:  50.00%
+
+Child component: wrap_cover_data_0
+   cover_index:              0.00%
+      index:                 0.00%
+
+Child component: wrap_cover_data_1
+   cover_index:              0.00%
+      index:                 0.00%
+UVM_INFO /xcelium25.03/tools/methodology/UVM/CDNS-1.2/sv/src/base/uvm_report_server.svh(851) @ 4685: reporter [UVM/REPORT/SERVER] 
+--- UVM Report Summary ---
+
+Quit count :     0 of     1
+** Report counts by severity
+UVM_INFO :  165
+UVM_WARNING :    0
+UVM_ERROR :    0
+UVM_FATAL :    0
+** Report counts by id
+[APB_MONITOR]     8
+[CNT_DROP]    20
+[COVERAGE]     4
+[ITEM_START]    28
+[MAXQUITSET]     1
+[MD_MONITOR_END]    20
+[MODEL_RX_DECISION]    20
+[RNTST]     1
+[SCOREBOARD_ACTUAL_RX]    20
+[SCOREBOARD_EXPECTED_RX]    20
+[SCOREBOARD_MATCH_RX]    20
+[SCOREBOARD_RESET]     1
+[TEST_DONE]     1
+[UVM/RELNOTES]     1
+
+Simulation complete via $finish(1) at time 4685 NS + 59
+/xcelium25.03/tools/methodology/UVM/CDNS-1.2/sv/src/base/uvm_root.svh:543     $finish;
+xcelium> exit
+xmsim: *N,COVCGN: Coverage configuration file command "set_covergroup -new_instance_reporting" can be specified to improve the scoping and naming of covergroup instances. It may be noted that subsequent merging of a coverage database saved with this command and a coverage database saved without this command is not allowed.
+
+coverage setup:
+  workdir  :  ./cov_work
+  dutinst  :  testbench(testbench)
+  scope    :  scope
+  testname :  test_sv-1744703579
+
+coverage files:
+  model(design data) :  ./cov_work/scope/icc_00000000_27293482.ucm
+  data               :  ./cov_work/scope/test_sv-1744703579/icc_00000000_27293482.ucd
+TOOL:	xrun	25.03-s001: Exiting on May 10, 2026 at 15:49:38 EDT  (total: 00:00:12)
+Done

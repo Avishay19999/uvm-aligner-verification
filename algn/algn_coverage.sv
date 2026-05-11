@@ -64,6 +64,9 @@
     
     virtual function void write_in_split_info(algn_split_info info);
       cover_split.sample(info);
+
+      `uvm_info("COVERAGE_SPLIT_SAMPLE", $sformatf("Sampled split coverage: CTRL.SIZE=%0d CTRL.OFFSET=%0d MD.size=%0d MD.offset=%0d num_bytes_needed=%0d",
+                                                   info.ctrl_size, info.ctrl_offset, info.md_size, info.md_offset, info.num_bytes_needed), UVM_MEDIUM)
     endfunction
     
     virtual function void handle_reset(uvm_phase phase);
@@ -92,7 +95,7 @@
       super.report_phase(phase);
 
       //Coverage summary printing is used here for lightweight demo/debug visibility.
-      `uvm_info("COVERAGE", $sformatf("Coverage: %0s", coverage2string()), UVM_DEBUG)
+      `uvm_info("COVERAGE", $sformatf("Coverage: %0s", coverage2string()), UVM_LOW)
     endfunction
   endclass
 
